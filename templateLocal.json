@@ -409,7 +409,7 @@
                             "properties": {
                                 "operationMode": "Import",
                                 "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "StorageAccessKey",
+                                "storageKeyType": "SharedAccessKey"
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
                                 "storageUri": "[uri(variables('_artifactLocationBacpac'), 'eSession-2020-12-31-11-2.bacpac')]"
@@ -448,7 +448,7 @@
                             "properties": {
                                 "operationMode": "Import",
                                 "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "StorageAccessKey",
+                                "storageKeyType": "SharedAccessKey"
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
                                 "storageUri": "[uri(variables('_artifactLocationBacpac'), 'SignalR-2020-12-31-11-16.bacpac')]"
@@ -487,7 +487,7 @@
                             "properties": {
                                 "operationMode": "Import",
                                 "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "StorageAccessKey",
+                                "storageKeyType": "SharedAccessKey"
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
                                 "storageUri": "[uri(variables('_artifactLocationBacpac'), 'DmsRenditions-2020-12-31-11-17.bacpac')]"
@@ -526,7 +526,7 @@
                             "properties": {
                                 "operationMode": "Import",
                                 "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "StorageAccessKey",
+                                "storageKeyType": "SharedAccessKey"
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
                                 "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms_queue-2020-12-31-11-17.bacpac')]"
