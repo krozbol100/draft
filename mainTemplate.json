@@ -173,7 +173,7 @@
                         "displayName": "webDeploy"
                     },
                     "properties": {
-                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_session-app.zip')]",
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
                         "dbType": "None",
                         "connectionString": ""
                     }
@@ -217,7 +217,7 @@
                         "displayName": "webDeploy"
                     },
                     "properties": {
-                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_esession-user.zip')]",
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-user.zip')]",
                         "dbType": "None",
                         "connectionString": ""
                     }
@@ -272,7 +272,7 @@
                         "displayName": "webDeploy"
                     },
                     "properties": {
-                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_esession-rendition.zip')]",
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-rendition.zip')]",
                         "dbType": "None",
                         "connectionString": ""
                     }
@@ -327,7 +327,7 @@
                         "displayName": "webDeploy"
                     },
                     "properties": {
-                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_esession-core.zip')]",
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-core.zip')]",
                         "dbType": "None",
                         "connectionString": ""
                     }
@@ -529,7 +529,7 @@
                                 "storageKeyType": "SharedAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms_queue-2020-12-31-11-17.bacpac')]"
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms-queue-2020-12-31-11-17.bacpac')]"
                             }
                         }
                     ]
