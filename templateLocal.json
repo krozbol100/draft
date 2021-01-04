@@ -49,7 +49,7 @@
         "servicePlanName01": "[concat(variables('siteName'), '-linux')]",
         "servicePlanName02": "[concat(variables('siteName'), '-asp')]",
         "sqlDatabaseSkuSizeGB": 16,
-        "_artifactsLocationSasToken": "?sv=2019-12-12&ss=bfqt&srt=c&sp=rwdlacupx&se=2024-01-04T21:58:54Z&st=2021-01-04T13:58:54Z&spr=https&sig=YqXPBseOUeyGdZPS5LGYQxEGadnvL834Pe662GvVDf8%3D",
+        "_artifactsLocationSasToken": "?sp=r&st=2021-01-04T14:25:36Z&se=2024-01-04T22:25:36Z&spr=https&sv=2019-12-12&sr=b&sig=6WyTAe%2FYm9iPqeCx%2B%2FXH5MvbsJBPwyh3FGNjK5ydNEQ%3D",
         "_artifactLocation": "[deployment().properties.templateLink.uri]",
         "_artifactLocationBacpac": "https://esession.blob.core.windows.net/bacpacfiles/",
         "sqlDatabaseServerlessTiers": [
