@@ -41,7 +41,7 @@
         "siteName03": "[concat('esession-user-', uniqueString(resourceGroup().id))]",
         "siteName04": "[concat('esession-rendition-', uniqueString(resourceGroup().id))]",
         "siteName05": "[concat('esession-core-', uniqueString(resourceGroup().id))]",
-        "databaseName01": "esession",
+        "databaseName01": "esession", 
         "databaseName02": "esession-signalr",
         "databaseName03": "esession-rendition",
         "databaseName04": "esession-dmsqueue",
