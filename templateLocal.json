@@ -49,7 +49,7 @@
         "servicePlanName01": "[concat(variables('siteName'), '-linux')]",
         "servicePlanName02": "[concat(variables('siteName'), '-asp')]",
         "sqlDatabaseSkuSizeGB": 16,
-        "_artifactsLocationSasToken": "?.rOk095J2VXEIyIDnS0z07eqoPwODG4VzjMOLtxNudET2NF0z30X19UP9Jo+pirCMuU+1UK9p+ONclPoOwzMQFw==",
+        "_artifactsLocationSasToken": "?sv=2019-12-12&ss=bfqt&srt=c&sp=rwdlacupx&se=2024-01-04T21:58:54Z&st=2021-01-04T13:58:54Z&spr=https&sig=YqXPBseOUeyGdZPS5LGYQxEGadnvL834Pe662GvVDf8%3D",
         "_artifactLocation": "[deployment().properties.templateLink.uri]",
         "_artifactLocationBacpac": "https://esession.blob.core.windows.net/bacpacfiles/",
         "sqlDatabaseServerlessTiers": [
@@ -192,7 +192,14 @@
             "kind": "app",
             "properties": {
                 "siteConfig": {
-                    "netFrameworkVersion": "v4.0"
+                    "netFrameworkVersion": "v4.0",
+                    "webSocketsEnabled": true,
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ]
                 },
                 "name": "[variables('siteName03')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
@@ -402,7 +409,7 @@
                             "properties": {
                                 "operationMode": "Import",
                                 "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "SharedAccessKey",
+                                "storageKeyType": "StorageAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
                                 "storageUri": "[uri(variables('_artifactLocationBacpac'), 'eSession-2020-12-31-11-2.bacpac')]"
@@ -441,7 +448,7 @@
                             "properties": {
                                 "operationMode": "Import",
                                 "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "SharedAccessKey",
+                                "storageKeyType": "StorageAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
                                 "storageUri": "[uri(variables('_artifactLocationBacpac'), 'SignalR-2020-12-31-11-16.bacpac')]"
@@ -480,7 +487,7 @@
                             "properties": {
                                 "operationMode": "Import",
                                 "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "SharedAccessKey",
+                                "storageKeyType": "StorageAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
                                 "storageUri": "[uri(variables('_artifactLocationBacpac'), 'DmsRenditions-2020-12-31-11-17.bacpac')]"
@@ -519,7 +526,7 @@
                             "properties": {
                                 "operationMode": "Import",
                                 "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "SharedAccessKey",
+                                "storageKeyType": "StorageAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
                                 "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms_queue-2020-12-31-11-17.bacpac')]"
