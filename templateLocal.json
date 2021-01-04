@@ -7,7 +7,7 @@
             "minLength": 1,
             "type": "String",
             "metadata": {
-                "description": "Azure SQL Server Administrator Username"
+                "description": "Azure SQL Server Administrator Username."
             }
         },
         "sqlServerAdministratorPassword": {
