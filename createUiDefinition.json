@@ -1,0 +1,70 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+      "basics": [
+        {}
+      ],
+      "steps": [
+        {
+          "name": "defaultConfig",
+          "label": "eSession settings",
+          "subLabel": {
+            "preValidation": "Configure the infrastructure settings",
+            "postValidation": "Done"
+          },
+          "bladeTitle": "eSession settings",
+          "elements": [
+            {
+                "name": "sqlServerAdministratorUsername",
+                "type": "Microsoft.Compute.UserNameTextBox",
+                "label": "SQL Server Admin Username",
+                "toolTip": "Admin username to connect to SQL Server and Databases",
+                "constraints": {
+                    "required": true
+                }
+            },
+            {
+                "name": "sqlServerAdministratorPassword",
+                "type": "Microsoft.Compute.CredentialsCombo",
+                "label": {
+                    "password": "Admin Password",
+                    "confirmPassword": "Repeat Admin Password"
+                },
+                "toolTip": {
+                    "password": "Password for SQL Admin user"
+                },
+                "constraints": {
+                    "required": true
+                }
+            },
+            {
+                "name": "locationLinux",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Location for Linux web apps.",
+                "toolTip": "Location for App Service plan which will host a Linux web apps.",
+                "constraints": {
+                    "required": true
+                }
+            },
+            {
+                "name": "location",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Location for Windows web apps and databases.",
+                "toolTip": "Location for App Service plan which will host a Windows web apps and SQL Databases.",
+                "constraints": {
+                    "required": true
+                }
+            }
+          ]
+        }
+      ],
+      "outputs": {
+        "sqlServerAdministratorUsername": "[steps('defaultConfig').sqlServerAdministratorUsername]",
+        "sqlServerAdministratorPassword": "[steps('defaultConfig').sqlServerAdministratorPassword.password]",
+        "locationLinux": "[steps('defaultConfig').locationLinux]",
+        "location": "[steps('defaultConfig').location]"
+      }
+    }
+  }

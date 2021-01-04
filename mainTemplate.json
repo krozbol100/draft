@@ -1,0 +1,540 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerAdministratorUsername": {
+            "defaultValue": "esessiondbadmin",
+            "minLength": 1,
+            "type": "String",
+            "metadata": {
+                "description": "Azure SQL Server Administrator Username."
+            }
+        },
+        "sqlServerAdministratorPassword": {
+            "defaultValue": "P@ssw0rd",
+            "minLength": 8,
+            "maxLength": 128,
+            "type": "SecureString",
+            "metadata": {
+                "description": "Azure SQL Server Administrator Password"
+            }
+        },
+        "locationLinux": {
+            "defaultValue": "eastus2",
+            "type": "String",
+            "metadata": {
+                "description": "Location for Linux web apps."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all the resources."
+            }
+        }
+    },
+    "variables": {
+        "siteName": "[concat('esession-', uniqueString(resourceGroup().id))]",
+        "siteName01": "[concat('esession-rest-', uniqueString(resourceGroup().id))]",
+        "siteName02": "[concat('esession-app-', uniqueString(resourceGroup().id))]",
+        "siteName03": "[concat('esession-user-', uniqueString(resourceGroup().id))]",
+        "siteName04": "[concat('esession-rendition-', uniqueString(resourceGroup().id))]",
+        "siteName05": "[concat('esession-core-', uniqueString(resourceGroup().id))]",
+        "databaseName01": "esession", 
+        "databaseName02": "esession-signalr",
+        "databaseName03": "esession-rendition",
+        "databaseName04": "esession-dmsqueue",
+        "sqlServerName": "[concat(variables('siteName'), '-sql')]",
+        "servicePlanName01": "[concat(variables('siteName'), '-linux')]",
+        "servicePlanName02": "[concat(variables('siteName'), '-asp')]",
+        "sqlDatabaseSkuSizeGB": 16,
+        "_artifactsLocationSasToken": "?sv=2019-12-12&ss=bfqt&srt=co&sp=rwdlacupx&se=2024-01-04T22:38:57Z&st=2021-01-04T14:38:57Z&spr=https&sig=tce9g032%2FrLzoVlrtog%2BKr%2BtynJ5P%2FDlUtbmk%2B6qr48%3D",
+        "_artifactLocation": "[deployment().properties.templateLink.uri]",
+        "_artifactLocationBacpac": "https://esession.blob.core.windows.net/bacpacfiles/",
+        "sqlDatabaseServerlessTiers": [
+            "GP_S_Gen5_1",
+            "GP_S_Gen5_2",
+            "GP_S_Gen5_4"
+        ]
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('servicePlanName01')]",
+            "location": "[parameters('locationLinux')]",
+            "sku": {
+                "name": "B1",
+                "tier": "Basic",
+                "size": "B1",
+                "family": "B",
+                "capacity": 1
+            },
+            "kind": "linux",
+            "properties": {
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('servicePlanName02')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "D1",
+                "tier": "Shared",
+                "size": "D1",
+                "family": "D",
+                "capacity": 0
+            },
+            "kind": "app",
+            "properties": {
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('siteName01')]",
+            "location": "[parameters('locationLinux')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName01'))]",
+                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+            ],
+            "kind": "app,linux,container",
+            "properties": {
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_URL",
+                            "value": "https://comtradehubtest.azurecr.io"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                            "value": "comtradehubtest"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                            "value": "uXF9bg2TPZqmQkFVGbKBOc9R/i4EWTkc"
+                        },
+                        {
+                            "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                            "value": "false"
+                        }
+                    ],
+                    "linuxFxVersion": "[concat('DOCKER|comtradehubtest.azurecr.io/docgen_mail_sign:1.0')]"
+                },
+                "name": "[variables('siteName01')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName01'))]"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('siteName02')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
+                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+            ],
+            "kind": "app",
+            "properties": {
+                "siteConfig": {
+                    "netFrameworkVersion": "v4.0"
+                },
+                "name": "[variables('siteName02')]",
+                "serverFarmId": "[variables('servicePlanName02')]"
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2015-08-01",
+                    "name": "MSDeploy",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName02'))]"
+                    ],
+                    "tags": {
+                        "displayName": "webDeploy"
+                    },
+                    "properties": {
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_session-app.zip')]",
+                        "dbType": "None",
+                        "connectionString": ""
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('siteName03')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
+                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+            ],
+            "kind": "app",
+            "properties": {
+                "siteConfig": {
+                    "netFrameworkVersion": "v4.0",
+                    "webSocketsEnabled": true,
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ]
+                },
+                "name": "[variables('siteName03')]",
+                "serverFarmId": "[variables('servicePlanName02')]"
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2015-08-01",
+                    "name": "MSDeploy",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName03'))]"
+                    ],
+                    "tags": {
+                        "displayName": "webDeploy"
+                    },
+                    "properties": {
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_esession-user.zip')]",
+                        "dbType": "None",
+                        "connectionString": ""
+                    }
+                },
+                {
+                    "type": "config",
+                    "apiVersion": "2020-06-01",
+                    "name": "appsettings",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('siteName03'))]",
+                        "[concat('Microsoft.Web/sites/', variables('siteName03'), '/Extensions/MSDeploy')]"
+                    ],
+                    "tags": {
+                        "displayName": "[concat(variables('siteName03'), '_ConnectionString_' ,variables('databaseName01'))]"
+                    },
+                    "properties": {
+                        "SONARQUBE_JDBC_URL": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName01'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
+                        "SONARQUBE_JDBC_USERNAME": "[parameters('sqlServerAdministratorUsername')]",
+                        "SONARQUBE_JDBC_PASSWORD": "[parameters('sqlServerAdministratorPassword')]",
+                        "sonar.path.data": "/home/sonarqube/data"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('siteName04')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
+                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+            ],
+            "kind": "app",
+            "properties": {
+                "siteConfig": {
+                    "netFrameworkVersion": "v4.0"
+                },
+                "name": "[variables('siteName04')]",
+                "serverFarmId": "[variables('servicePlanName02')]"
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2015-08-01",
+                    "name": "MSDeploy",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName04'))]"
+                    ],
+                    "tags": {
+                        "displayName": "webDeploy"
+                    },
+                    "properties": {
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_esession-rendition.zip')]",
+                        "dbType": "None",
+                        "connectionString": ""
+                    }
+                },
+                {
+                    "type": "config",
+                    "apiVersion": "2020-06-01",
+                    "name": "appsettings",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('siteName04'))]",
+                        "[concat('Microsoft.Web/sites/', variables('siteName04'), '/Extensions/MSDeploy')]"
+                    ],
+                    "tags": {
+                        "displayName": "[concat(variables('siteName04'), '_ConnectionString_' ,variables('databaseName03'))]"
+                    },
+                    "properties": {
+                        "SONARQUBE_JDBC_URL_03": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName03'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
+                        "SONARQUBE_JDBC_URL_04": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName04'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
+                        "SONARQUBE_JDBC_USERNAME": "[parameters('sqlServerAdministratorUsername')]",
+                        "SONARQUBE_JDBC_PASSWORD": "[parameters('sqlServerAdministratorPassword')]",
+                        "sonar.path.data": "/home/sonarqube/data"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('siteName05')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
+                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+            ],
+            "properties": {
+                "siteConfig": {
+                    "netFrameworkVersion": "v4.0"
+                },
+                "name": "[variables('siteName05')]",
+                "serverFarmId": "[variables('servicePlanName02')]"
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2015-08-01",
+                    "name": "MSDeploy",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName05'))]"
+                    ],
+                    "tags": {
+                        "displayName": "webDeploy"
+                    },
+                    "properties": {
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_esession-core.zip')]",
+                        "dbType": "None",
+                        "connectionString": ""
+                    }
+                },
+                {
+                    "type": "config",
+                    "apiVersion": "2020-06-01",
+                    "name": "appsettings",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('siteName05'))]",
+                        "[concat('Microsoft.Web/sites/', variables('siteName05'), '/Extensions/MSDeploy')]"
+                    ],
+                    "tags": {
+                        "displayName": "[concat(variables('siteName05'), '_ConnectionString_' ,variables('databaseName01'))]"
+                    },
+                    "properties": {
+                        "SONARQUBE_JDBC_URL_01": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName01'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
+                        "SONARQUBE_JDBC_URL_02": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName02'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
+                        "SONARQUBE_JDBC_USERNAME": "[parameters('sqlServerAdministratorUsername')]",
+                        "SONARQUBE_JDBC_PASSWORD": "[parameters('sqlServerAdministratorPassword')]",
+                        "sonar.path.data": "/home/sonarqube/data"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('sqlServerName')]",
+            "location": "[parameters('location')]",
+            "kind": "v12.0",
+            "properties": {
+                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                "version": "12.0"
+            },
+            "resources": [
+                {
+                    "type": "firewallrules",
+                    "apiVersion": "2020-02-02-preview",
+                    "name": "[concat(variables('sqlServerName'),'firewall')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                    ],
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                },
+                {
+                    "type": "databases",
+                    "apiVersion": "2020-02-02-preview",
+                    "name": "[variables('databaseName01')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                    ],
+                    "sku": {
+                        "name": "GP_S_Gen5",
+                        "tier": "GeneralPurpose",
+                        "family": "Gen5",
+                        "capacity": 1
+                    },
+                    "kind": "v12.0,user,vcore,serverless",
+                    "properties": {
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                        "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
+                    },
+                    "resources": [
+                        {
+                            "type": "extensions",
+                            "apiVersion": "2014-04-01",
+                            "name": "Import",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName01'))]"
+                            ],
+                            "properties": {
+                                "operationMode": "Import",
+                                "storageKey": "[variables('_artifactsLocationSasToken')]",
+                                "storageKeyType": "SharedAccessKey",
+                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'eSession-2020-12-31-11-2.bacpac')]"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "databases",
+                    "apiVersion": "2020-02-02-preview",
+                    "name": "[variables('databaseName02')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                    ],
+                    "sku": {
+                        "name": "GP_S_Gen5",
+                        "tier": "GeneralPurpose",
+                        "family": "Gen5",
+                        "capacity": 1
+                    },
+                    "kind": "v12.0,user,vcore,serverless",
+                    "properties": {
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                        "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
+                    },
+                    "resources": [
+                        {
+                            "type": "extensions",
+                            "apiVersion": "2014-04-01",
+                            "name": "Import",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02'))]"
+                            ],
+                            "properties": {
+                                "operationMode": "Import",
+                                "storageKey": "[variables('_artifactsLocationSasToken')]",
+                                "storageKeyType": "SharedAccessKey",
+                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'SignalR-2020-12-31-11-16.bacpac')]"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "databases",
+                    "apiVersion": "2020-02-02-preview",
+                    "name": "[variables('databaseName03')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                    ],
+                    "sku": {
+                        "name": "GP_S_Gen5",
+                        "tier": "GeneralPurpose",
+                        "family": "Gen5",
+                        "capacity": 1
+                    },
+                    "kind": "v12.0,user,vcore,serverless",
+                    "properties": {
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                        "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
+                    },
+                    "resources": [
+                        {
+                            "type": "extensions",
+                            "apiVersion": "2014-04-01",
+                            "name": "Import",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03'))]"
+                            ],
+                            "properties": {
+                                "operationMode": "Import",
+                                "storageKey": "[variables('_artifactsLocationSasToken')]",
+                                "storageKeyType": "SharedAccessKey",
+                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'DmsRenditions-2020-12-31-11-17.bacpac')]"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "databases",
+                    "apiVersion": "2020-02-02-preview",
+                    "name": "[variables('databaseName04')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                    ],
+                    "sku": {
+                        "name": "GP_S_Gen5",
+                        "tier": "GeneralPurpose",
+                        "family": "Gen5",
+                        "capacity": 1
+                    },
+                    "kind": "v12.0,user,vcore,serverless",
+                    "properties": {
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                        "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
+                    },
+                    "resources": [
+                        {
+                            "type": "extensions",
+                            "apiVersion": "2014-04-01",
+                            "name": "Import",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName04'))]"
+                            ],
+                            "properties": {
+                                "operationMode": "Import",
+                                "storageKey": "[variables('_artifactsLocationSasToken')]",
+                                "storageKeyType": "SharedAccessKey",
+                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms_queue-2020-12-31-11-17.bacpac')]"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
