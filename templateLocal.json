@@ -49,8 +49,9 @@
         "servicePlanName01": "[concat(variables('siteName'), '-linux')]",
         "servicePlanName02": "[concat(variables('siteName'), '-asp')]",
         "sqlDatabaseSkuSizeGB": 16,
-        "_artifactsLocationSasToken": "rOk095J2VXEIyIDnS0z07eqoPwODG4VzjMOLtxNudET2NF0z30X19UP9Jo+pirCMuU+1UK9p+ONclPoOwzMQFw==",
+        "_artifactsLocationSasToken": "?.rOk095J2VXEIyIDnS0z07eqoPwODG4VzjMOLtxNudET2NF0z30X19UP9Jo+pirCMuU+1UK9p+ONclPoOwzMQFw==",
         "_artifactLocation": "[deployment().properties.templateLink.uri]",
+        "_artifactLocationBacpac": "https://esession.blob.core.windows.net/bacpacfiles/",
         "sqlDatabaseServerlessTiers": [
             "GP_S_Gen5_1",
             "GP_S_Gen5_2",
@@ -404,7 +405,7 @@
                                 "storageKeyType": "SharedAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocation'), 'db/eSession-2020-12-31-11-2.bacpac')]"
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'eSession-2020-12-31-11-2.bacpac')]"
                             }
                         }
                     ]
@@ -443,7 +444,7 @@
                                 "storageKeyType": "SharedAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocation'), 'db/SignalR-2020-12-31-11-16.bacpac')]"
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'SignalR-2020-12-31-11-16.bacpac')]"
                             }
                         }
                     ]
@@ -482,7 +483,7 @@
                                 "storageKeyType": "SharedAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocation'), 'db/DmsRenditions-2020-12-31-11-17.bacpac')]"
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'DmsRenditions-2020-12-31-11-17.bacpac')]"
                             }
                         }
                     ]
@@ -521,7 +522,7 @@
                                 "storageKeyType": "SharedAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocation'), 'db/dms_queue-2020-12-31-11-17.bacpac')]"
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms_queue-2020-12-31-11-17.bacpac')]"
                             }
                         }
                     ]
