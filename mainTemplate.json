@@ -443,7 +443,8 @@
                             "apiVersion": "2014-04-01",
                             "name": "Import",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02'))]"
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02'))]",
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName01')).extensions.Import]"
                             ],
                             "properties": {
                                 "operationMode": "Import",
@@ -482,7 +483,8 @@
                             "apiVersion": "2014-04-01",
                             "name": "Import",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03'))]"
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03'))]",
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02')).extensions.Import]"
                             ],
                             "properties": {
                                 "operationMode": "Import",
@@ -521,7 +523,8 @@
                             "apiVersion": "2014-04-01",
                             "name": "Import",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName04'))]"
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName04'))]",
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03')).extensions.Import]"
                             ],
                             "properties": {
                                 "operationMode": "Import",
