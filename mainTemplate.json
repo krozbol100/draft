@@ -444,7 +444,7 @@
                             "name": "Import",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02'))]",
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName01')).extensions.Import]"
+                                "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName01'))]"
                             ],
                             "properties": {
                                 "operationMode": "Import",
@@ -484,7 +484,7 @@
                             "name": "Import",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03'))]",
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02')).extensions.Import]"
+                                "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName02'))]"
                             ],
                             "properties": {
                                 "operationMode": "Import",
@@ -524,7 +524,7 @@
                             "name": "Import",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName04'))]",
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03')).extensions.Import]"
+                                "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName03'))]"
                             ],
                             "properties": {
                                 "operationMode": "Import",
