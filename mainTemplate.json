@@ -155,7 +155,14 @@
             "kind": "app",
             "properties": {
                 "siteConfig": {
-                    "netFrameworkVersion": "v4.0"
+                    "netFrameworkVersion": "v4.0",
+                    "webSocketsEnabled": true,
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ]
                 },
                 "name": "[variables('siteName02')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
@@ -192,14 +199,7 @@
             "kind": "app",
             "properties": {
                 "siteConfig": {
-                    "netFrameworkVersion": "v4.0",
-                    "webSocketsEnabled": true,
-                    "metadata": [
-                        {
-                            "name": "CURRENT_STACK",
-                            "value": "dotnetcore"
-                        }
-                    ]
+                    "netFrameworkVersion": "v4.0"
                 },
                 "name": "[variables('siteName03')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
@@ -254,7 +254,14 @@
             "kind": "app",
             "properties": {
                 "siteConfig": {
-                    "netFrameworkVersion": "v4.0"
+                    "netFrameworkVersion": "v4.0",
+                    "webSocketsEnabled": true,
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ]
                 },
                 "name": "[variables('siteName04')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
@@ -309,7 +316,14 @@
             ],
             "properties": {
                 "siteConfig": {
-                    "netFrameworkVersion": "v4.0"
+                    "netFrameworkVersion": "v4.0",
+                    "webSocketsEnabled": true,
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ]
                 },
                 "name": "[variables('siteName05')]",
                 "serverFarmId": "[variables('servicePlanName02')]"

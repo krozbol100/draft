@@ -75,7 +75,14 @@
             "kind": "app",
             "properties": {
                 "siteConfig": {
-                    "netFrameworkVersion": "v4.0"
+                    "netFrameworkVersion": "v4.0",
+                    "webSocketsEnabled": true,
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ]
                 },
                 "name": "[variables('siteName02')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
@@ -96,6 +103,25 @@
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_session-app.zip')]",
                         "dbType": "None",
                         "connectionString": ""
+                    }
+                },
+                {
+                    "type": "config",
+                    "apiVersion": "2020-06-01",
+                    "name": "appsettings",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('siteName02'))]",
+                        "[concat('Microsoft.Web/sites/', variables('siteName02'), '/Extensions/MSDeploy')]"
+                    ],
+                    "tags": {
+                        "displayName": "[concat(variables('siteName02'), '_ConnectionString_' ,variables('databaseName01'))]"
+                    },
+                    "properties": {
+                        "SONARQUBE_JDBC_URL_01": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName01'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
+                        "SONARQUBE_JDBC_URL_02": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName02'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
+                        "SONARQUBE_JDBC_USERNAME": "[parameters('sqlServerAdministratorUsername')]",
+                        "SONARQUBE_JDBC_PASSWORD": "[parameters('sqlServerAdministratorPassword')]",
+                        "sonar.path.data": "/home/sonarqube/data"
                     }
                 }
             ]
@@ -166,5 +192,19 @@
                 }
             ]
         }
-    ]
+    ],
+    "outputs": {
+        "sqlServerName": {
+            "value": "[reference(variables('sqlServerName'))]",
+            "type": "string"
+        },
+        "databaseName01": {
+            "value": "[reference(variables('databaseName01'))]",
+            "type": "string"
+        },
+        "siteName02": {
+            "value": "[reference(variables('siteName02')).hostNameSslStates.name]",
+            "type": "string"
+        }
+    }
 }
