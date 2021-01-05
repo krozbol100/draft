@@ -529,7 +529,7 @@
                                 "storageKeyType": "SharedAccessKey",
                                 "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
                                 "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms-queue-2020-12-31-11-17.bacpac')]"
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms_queue-2020-12-31-11-17.bacpac')]"
                             }
                         }
                     ]
