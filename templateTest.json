@@ -195,15 +195,15 @@
     ],
     "outputs": {
         "sqlServerName": {
-            "value": "[reference(variables('sqlServerName')).name]",
+            "value": "[reference(variables('sqlServerName')).fullyQualifiedDomainName]",
             "type": "string"
         },
         "databaseName01": {
-            "value": "[reference(variables('databaseName01')).name]",
+            "value": "[variables('databaseName01')]",
             "type": "string"
         },
         "siteName02": {
-            "value": "[reference(variables('siteName02')).properties.hostNameSslStates.name]",
+            "value": "[concat(variables('siteName02'), '.azurewebsites.net')]",
             "type": "string"
         }
     }
