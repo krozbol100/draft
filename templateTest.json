@@ -1,0 +1,170 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerAdministratorUsername": {
+            "defaultValue": "esessiondbadmin",
+            "minLength": 1,
+            "type": "String",
+            "metadata": {
+                "description": "Azure SQL Server Administrator Username."
+            }
+        },
+        "sqlServerAdministratorPassword": {
+            "defaultValue": "P@ssw0rd",
+            "minLength": 8,
+            "maxLength": 128,
+            "type": "SecureString",
+            "metadata": {
+                "description": "Azure SQL Server Administrator Password"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all the resources."
+            }
+        }
+    },
+    "variables": {
+        "siteName": "[concat('esession-', uniqueString(resourceGroup().id))]",
+        "siteName02": "[concat('esession-app-', uniqueString(resourceGroup().id))]",
+        "databaseName01": "esession", 
+        "sqlServerName": "[concat(variables('siteName'), '-sql')]",
+        "servicePlanName02": "[concat(variables('siteName'), '-asp')]",
+        "sqlDatabaseSkuSizeGB": 16,
+        "_artifactsLocationSasToken": "?sv=2019-12-12&ss=bfqt&srt=co&sp=rwdlacupx&se=2024-01-04T22:38:57Z&st=2021-01-04T14:38:57Z&spr=https&sig=tce9g032%2FrLzoVlrtog%2BKr%2BtynJ5P%2FDlUtbmk%2B6qr48%3D",
+        "_artifactLocation": "[deployment().properties.templateLink.uri]",
+        "_artifactLocationBacpac": "https://esession.blob.core.windows.net/bacpacfiles/"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('servicePlanName02')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "D1",
+                "tier": "Shared",
+                "size": "D1",
+                "family": "D",
+                "capacity": 0
+            },
+            "kind": "app",
+            "properties": {
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('siteName02')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
+                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+            ],
+            "kind": "app",
+            "properties": {
+                "siteConfig": {
+                    "netFrameworkVersion": "v4.0"
+                },
+                "name": "[variables('siteName02')]",
+                "serverFarmId": "[variables('servicePlanName02')]"
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2015-08-01",
+                    "name": "MSDeploy",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName02'))]"
+                    ],
+                    "tags": {
+                        "displayName": "webDeploy"
+                    },
+                    "properties": {
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot_session-app.zip')]",
+                        "dbType": "None",
+                        "connectionString": ""
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('sqlServerName')]",
+            "location": "[parameters('location')]",
+            "kind": "v12.0",
+            "properties": {
+                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                "version": "12.0"
+            },
+            "resources": [
+                {
+                    "type": "firewallrules",
+                    "apiVersion": "2020-02-02-preview",
+                    "name": "[concat(variables('sqlServerName'),'firewall')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                    ],
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                },
+                {
+                    "type": "databases",
+                    "apiVersion": "2020-02-02-preview",
+                    "name": "[variables('databaseName01')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                    ],
+                    "sku": {
+                        "name": "GP_S_Gen5",
+                        "tier": "GeneralPurpose",
+                        "family": "Gen5",
+                        "capacity": 1
+                    },
+                    "kind": "v12.0,user,vcore,serverless",
+                    "properties": {
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                        "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
+                    },
+                    "resources": [
+                        {
+                            "type": "extensions",
+                            "apiVersion": "2014-04-01",
+                            "name": "Import",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName01'))]"
+                            ],
+                            "properties": {
+                                "operationMode": "Import",
+                                "storageKey": "[variables('_artifactsLocationSasToken')]",
+                                "storageKeyType": "SharedAccessKey",
+                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'eSession-2020-12-31-11-2.bacpac')]"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
