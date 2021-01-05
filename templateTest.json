@@ -195,15 +195,15 @@
     ],
     "outputs": {
         "sqlServerName": {
-            "value": "[reference(variables('sqlServerName'))]",
+            "value": "[reference(variables('sqlServerName')).name]",
             "type": "string"
         },
         "databaseName01": {
-            "value": "[reference(variables('databaseName01'))]",
+            "value": "[reference(variables('databaseName01')).name]",
             "type": "string"
         },
         "siteName02": {
-            "value": "[reference(variables('siteName02')).hostNameSslStates.name]",
+            "value": "[reference(variables('siteName02')).properties.hostNameSslStates.name]",
             "type": "string"
         }
     }
