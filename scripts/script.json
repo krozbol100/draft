@@ -2,14 +2,21 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "name":{
-        "type": "string",
-        "defaultValue": "\\\"John Dole\\\""
+      "sqlServerName":{
+        "type": "string"
       },
-      "utcValue": {
-        "type": "string",
-        "defaultValue": "[utcNow()]"
+      "databaseName": {
+        "type": "string"
+      },
+      "sqlAdmin": {
+        "type": "string"
+      },
+      "sqlPassword": {
+        "type": "string"
       }
+    },
+    "variables": {
+        "connString": "[concat('Server=tcp:', parameters('sqlServerName'), ',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User ID=', parameters('sqlAdmin'), ';Password=', parameters('sqlPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
     },
     "resources": [
       {
@@ -22,13 +29,28 @@
           "forceUpdateTag": "[parameters('utcValue')]",
           "azPowerShellVersion": "5.0",
           "scriptContent": "
-            param([string] $name)
-            $output = \"Hello {0}\" -f $name
-            Write-Output $output
-            $DeploymentScriptOutputs = @{}
-            $DeploymentScriptOutputs['text'] = $output
+            [Reflection.Assembly]::LoadWithPartialName("System.Security")
+            param([string] $connStr
+            $key = [Byte[]](122, 2, 87, 224, 212, 156, 97, 98, 4, 1, 78, 92, 44, 43, 201, 14)
+            $IV = [Byte[]](73, 37, 17, 71, 1, 31, 33, 77)
+            $r = New-Object System.Security.Cryptography.RC2CryptoServiceProvider
+            $r.Key = $key
+            $r.IV = $IV
+            $ms = New-Object IO.MemoryStream
+            $c = $r.CreateEncryptor()
+            $cs = New-Object Security.Cryptography.CryptoStream $ms,$c,"Write"
+            $sw = New-Object IO.StreamWriter $cs
+            $sw.Write($connStr)
+            $sw.Close()  
+            $cs.Close() 
+            $ms.Close() 
+            $r.Clear() 
+            [byte[]]$result = $ms.ToArray() 
+            $resultString = [Convert]::ToBase64String($result);
+            Write-Output $resultString
+            $DeploymentScriptOutputs['text'] = $resultString
           ",
-          "arguments": "[concat('-name', ' ', parameters('name'))]",
+          "arguments": "[variables('connString')]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
