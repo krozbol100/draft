@@ -13,7 +13,11 @@
       },
       "sqlPassword": {
         "type": "string"
-      }
+      },
+      "utcValue": {
+        "type": "string",
+        "defaultValue": "[utcNow()]"
+    }
     },
     "variables": {
         "connString": "[concat('Server=tcp:', parameters('sqlServerName'), ',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User ID=', parameters('sqlAdmin'), ';Password=', parameters('sqlPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
@@ -26,6 +30,7 @@
         "location": "[resourceGroup().location]",
         "kind": "AzurePowerShell",
         "properties": {
+          "forceUpdateTag": "[parameters('utcValue')]",
           "azPowerShellVersion": "5.0",
           "supportingScriptUris": ["https://raw.githubusercontent.com/krozbol100/draft/master/scripts/encrypt.ps1"],
           "arguments": "[variables('connString')]",
