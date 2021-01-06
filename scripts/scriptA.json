@@ -12,7 +12,7 @@
         "type": "string"
       },
       "sqlPassword": {
-        "type": "string"
+        "type": "secureString"
       },
       "utcValue": {
         "type": "string",
@@ -35,7 +35,7 @@
           "scriptContent": "
             $sqlServerName = $args[0]
             $sqlAdmin = $args[1]
-            $sqlPassword = $args[2]
+            $sqlPassword = ConvertTo-SecureString $args[2] -AsPlainText -Force
             $databaseName = $args[3]
             $connStr = \"Server=tcp:\" + $sqlServerName + \",1433;Initial Catalog=\" + $databaseName + \";Persist Security Info=False;User ID=\" + $sqlAdmin + \";Password=\" + $sqlPassword + \";MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;\"
 
