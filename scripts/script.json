@@ -57,6 +57,7 @@
 
             $resultString = [Convert]::ToBase64String($result);
             $DeploymentScriptOutputs['text'] = $resultString
+            $DeploymentScriptOutputs['connString'] = $connString
         ",
           "arguments": "[variables('connString')]",
           "timeout": "PT1H",
@@ -67,7 +68,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.text, 'i nakon toga:', variables('connString'))]",
+        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.text, 'i nakon toga:', reference('runPowerShellInlineWithOutput').outputs.connString)]",
         "type": "string"
       }
     }
