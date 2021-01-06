@@ -61,6 +61,7 @@
             $resultString = [Convert]::ToBase64String($result);
             $DeploymentScriptOutputs['text'] = $resultString
             $DeploymentScriptOutputs['connString'] = $connStr
+            $DeploymentScriptOutputs['sqlPassword'] = $sqlPassword
         ",
           "arguments": "[concat(parameters('sqlServerName'),' ', parameters('sqlAdmin'), ' ', parameters('sqlPassword'), ' ',parameters('databaseName'))]",
           "timeout": "PT1H",
@@ -71,7 +72,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.text, 'i nakon toga:', reference('runPowerShellInlineWithOutput').outputs.connString)]",
+        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.text, ' i nakon toga: ', reference('runPowerShellInlineWithOutput').outputs.connString,' i nakon toga: ', reference('runPowerShellInlineWithOutput').outputs.sqlPassword)]",
         "type": "string"
       }
     }
