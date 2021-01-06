@@ -20,7 +20,7 @@
     }
     },
     "variables": {
-        "connString": "[concat('Server=tcp:', parameters('sqlServerName'), ',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User ID=', parameters('sqlAdmin'), ';Password=', parameters('sqlPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+        "connString": "[concat('''Server=tcp:', parameters('sqlServerName'), ',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User ID=', parameters('sqlAdmin'), ';Password=', parameters('sqlPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;''')]"
     },
     "resources": [
       {
@@ -58,7 +58,7 @@
             Write-Output $resultString
             $DeploymentScriptOutputs['text'] = $resultString
         ",
-          "arguments": "[concat('''',variables('connString'),'''')]",
+          "arguments": "[variables('connString')]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
