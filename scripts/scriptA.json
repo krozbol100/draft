@@ -2,25 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "sqlServerName":{
-        "type": "string"
-      },
-      "databaseName": {
-        "type": "string"
-      },
-      "sqlAdmin": {
-        "type": "string"
-      },
-      "sqlPassword": {
-        "type": "secureString"
-      },
+      "connString": {"type": "secureObject"},
       "utcValue": {
         "type": "string",
         "defaultValue": "[utcNow()]"
     }
-    },
-    "variables": {
-        "connString": "[concat('''Server=tcp:', parameters('sqlServerName'), ',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User ID=', parameters('sqlAdmin'), ';Password=', parameters('sqlPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;''')]"
     },
     "resources": [
       {
@@ -60,11 +46,8 @@
 
             $resultString = [Convert]::ToBase64String($result);
             $DeploymentScriptOutputs['text'] = $resultString
-            $DeploymentScriptOutputs['connString'] = $connStr
-            $DeploymentScriptOutputs['sqlPassword'] = $sqlPassword
-            $DeploymentScriptOutputs['input'] = $args[2]
         ",
-          "arguments": "[concat(parameters('sqlServerName'),' ', parameters('sqlAdmin'), ' ''', parameters('sqlPassword'), ''' ',parameters('databaseName'))]",
+          "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin, ' ''', parameters('connString').sqlPassword, ''' ',parameters('connString').databaseName)]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
@@ -73,7 +56,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.text, ' i nakon toga connString: ', reference('runPowerShellInlineWithOutput').outputs.connString,' i nakon toga sqlPassword: ', reference('runPowerShellInlineWithOutput').outputs.sqlPassword,' i nakon toga ulazni: ', parameters('sqlPassword'),' i nakon toga input: ', reference('runPowerShellInlineWithOutput').outputs.input)]",
+        "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
         "type": "string"
       }
     }
