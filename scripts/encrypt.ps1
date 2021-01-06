@@ -23,3 +23,4 @@ $r.Clear()
 
 $resultString = [Convert]::ToBase64String($result);
 Write-Output $resultString
+$DeploymentScriptOutputs['text'] = $resultString
