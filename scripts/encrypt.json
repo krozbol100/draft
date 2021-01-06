@@ -2,11 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "connString": {"type": "secureObject"}
+      "connString": {"type": "secureObject"},
+      "utcValue": "[utcNow()]"
     },
     "variables": {
-        "pass": "[concat('''',parameters('connString').sqlPassword,'''')]",
-        "utcValue": "[utcNow()]"
+        "pass": "[concat('''',parameters('connString').sqlPassword,'''')]"
     },
     "resources": [
       {
@@ -16,7 +16,7 @@
         "location": "[resourceGroup().location]",
         "kind": "AzurePowerShell",
         "properties": {
-          "forceUpdateTag": "[variables('utcValue')]",
+          "forceUpdateTag": "[parameters('utcValue')]",
           "azPowerShellVersion": "5.0",
           "scriptContent": "
             $sqlServerName = $args[0]
