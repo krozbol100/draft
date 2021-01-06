@@ -1,4 +1,4 @@
-﻿[Reflection.Assembly]::LoadWithPartialName("System.Security") 
+﻿#[Reflection.Assembly]::LoadWithPartialName("System.Security") 
 
 $connStr = $args[0]
 
