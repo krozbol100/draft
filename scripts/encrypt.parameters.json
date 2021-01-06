@@ -1,0 +1,14 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "connString": {
+            "value": {
+                "sqlAdmin":"eSessionAzure",
+                "sqlPassword":"e$e$$ion@zure123!!",
+                "sqlServerName":"esession-sqlserver.database.windows.net",
+                "databaseName":"DemoeSession"
+            }
+        }
+    }
+}

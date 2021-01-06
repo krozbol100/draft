@@ -2,25 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "sqlServerName":{
-        "type": "string"
-      },
-      "databaseName": {
-        "type": "string"
-      },
-      "sqlAdmin": {
-        "type": "string"
-      },
-      "sqlPassword": {
-        "type": "string"
-      },
-      "utcValue": {
-        "type": "string",
-        "defaultValue": "[utcNow()]"
-    }
+      "connString": {"type": "secureObject"}
     },
     "variables": {
-        "connString": "[concat('''Server=tcp:', parameters('sqlServerName'), ',1433;Initial Catalog=', parameters('databaseName'), ';Persist Security Info=False;User ID=', parameters('sqlAdmin'), ';Password=', parameters('sqlPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;''')]"
+        "pass": "[concat('''',parameters('connString').sqlPassword,'''')]",
+        "utcValue": "[utcNow()]"
     },
     "resources": [
       {
@@ -30,11 +16,14 @@
         "location": "[resourceGroup().location]",
         "kind": "AzurePowerShell",
         "properties": {
-          "forceUpdateTag": "[parameters('utcValue')]",
+          "forceUpdateTag": "[variables('utcValue')]",
           "azPowerShellVersion": "5.0",
           "scriptContent": "
-            $connStr = $args[0]
-            #$connStr = $connStr.Substring(1,$connStr.Length-2)
+            $sqlServerName = $args[0]
+            $sqlAdmin = $args[1]
+            $sqlPassword = $args[2]
+            $databaseName = $args[3]
+            $connStr = 'Server=tcp:' + $sqlServerName + ',1433;Initial Catalog=' + $databaseName + ';Persist Security Info=False;User ID=' + $sqlAdmin + ';Password=' + $sqlPassword + ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
             $key = [Byte[]](122, 2, 87, 224, 212, 156, 97, 98, 4, 1, 78, 92, 44, 43, 201, 14)
             $IV = [Byte[]](73, 37, 17, 71, 1, 31, 33, 77)
@@ -57,9 +46,9 @@
 
             $resultString = [Convert]::ToBase64String($result);
             $DeploymentScriptOutputs['text'] = $resultString
-            $DeploymentScriptOutputs['connString'] = $connStr
+            $DeploymentScriptOutputs['sql'] = $args[2]
         ",
-          "arguments": "[variables('connString')]",
+          "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin, ' ''', variables('pass'), ''' ',parameters('connString').databaseName)]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
@@ -68,7 +57,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.text, 'i nakon toga:', reference('runPowerShellInlineWithOutput').outputs.connString)]",
+        "value": "[reference('runPowerShellInlineWithOutput').outputs.sql]",
         "type": "string"
       }
     }

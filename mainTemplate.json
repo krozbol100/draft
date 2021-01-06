@@ -52,11 +52,35 @@
         "_artifactsLocationSasToken": "?sv=2019-12-12&ss=bfqt&srt=co&sp=rwdlacupx&se=2024-01-04T22:38:57Z&st=2021-01-04T14:38:57Z&spr=https&sig=tce9g032%2FrLzoVlrtog%2BKr%2BtynJ5P%2FDlUtbmk%2B6qr48%3D",
         "_artifactLocation": "[deployment().properties.templateLink.uri]",
         "_artifactLocationBacpac": "https://esession.blob.core.windows.net/bacpacfiles/",
-        "sqlDatabaseServerlessTiers": [
-            "GP_S_Gen5_1",
-            "GP_S_Gen5_2",
-            "GP_S_Gen5_4"
-        ]
+        "connString01": {
+            "value": {
+                "sqlAdmin":"[parameters('sqlServerAdministratorUsername')]",
+                "sqlPassword":"[parameters('sqlServerAdministratorPassword')]",
+                "sqlServerName":"[variables('sqlServerName')]",
+                "databaseName":"[variables('databaseName01')]"
+            },
+        "connString02": {
+            "value": {
+                "sqlAdmin":"[parameters('sqlServerAdministratorUsername')]",
+                "sqlPassword":"[parameters('sqlServerAdministratorPassword')]",
+                "sqlServerName":"[variables('sqlServerName')]",
+                "databaseName":"[variables('databaseName02')]"
+            },
+        "connString03": {
+            "value": {
+                "sqlAdmin":"[parameters('sqlServerAdministratorUsername')]",
+                "sqlPassword":"[parameters('sqlServerAdministratorPassword')]",
+                "sqlServerName":"[variables('sqlServerName')]",
+                "databaseName":"[variables('databaseName03')]"
+            },
+        "connString04": {
+            "value": {
+                "sqlAdmin":"[parameters('sqlServerAdministratorUsername')]",
+                "sqlPassword":"[parameters('sqlServerAdministratorPassword')]",
+                "sqlServerName":"[variables('sqlServerName')]",
+                "databaseName":"[variables('databaseName04')]"
+            }
+        }
     },
     "resources": [
         {
@@ -553,5 +577,11 @@
                 }
             ]
         }
-    ]
+    ],
+    "outputs": {
+        "eSessionEndpoint": {
+            "value": "[concat(variables('siteName02'), '.azurewebsites.net')]",
+            "type": "string"
+        }
+    }
 }
