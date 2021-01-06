@@ -8,6 +8,9 @@
         "defaultValue": "[utcNow()]"
     }
     },
+    "variables": {
+        "pass": "[concat('''',parameters('connString').sqlPassword,'''')]"
+    },
     "resources": [
       {
         "type": "Microsoft.Resources/deploymentScripts",
@@ -19,10 +22,10 @@
           "forceUpdateTag": "[parameters('utcValue')]",
           "azPowerShellVersion": "5.0",
           "scriptContent": "
-            $sqlServerName = $args[0].parameters.connString.value.sqlServerName
-            $sqlAdmin = $args[0].parameters.connString.value.sqlAdmin
-            $sqlPassword = $args[0].parameters.connString.value.sqlPassword
-            $databaseName = $args[0].parameters.connString.value.databaseName
+            $sqlServerName = $args[0]
+            $sqlAdmin = $args[1]
+            $sqlPassword = $args[2]
+            $databaseName = $args[3]
             $connStr = 'Server=tcp:' + $sqlServerName + ',1433;Initial Catalog=' + $databaseName + ';Persist Security Info=False;User ID=' + $sqlAdmin + ';Password=' + $sqlPassword + ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
             $key = [Byte[]](122, 2, 87, 224, 212, 156, 97, 98, 4, 1, 78, 92, 44, 43, 201, 14)
@@ -46,9 +49,8 @@
 
             $resultString = [Convert]::ToBase64String($result);
             $DeploymentScriptOutputs['text'] = $resultString
-            $DeploymentScriptOutputs['sql'] = $sqlPassword
         ",
-          "arguments": "[parameters('connString')]",
+          "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin, ' ''', variables('pass'), ''' ',parameters('connString').databaseName)]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
@@ -57,7 +59,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[reference('runPowerShellInlineWithOutput').outputs.sql]",
+        "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
         "type": "string"
       }
     }
