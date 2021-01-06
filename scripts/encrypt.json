@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "connString": {"type": "secureObject"},
-      "utcValue": "[utcNow()]"
+      "utcValue": {"type": "string", "defaultValue": "[utcNow()]"}
     },
     "variables": {
         "pass": "[concat('''',parameters('connString').sqlPassword,'''')]"
