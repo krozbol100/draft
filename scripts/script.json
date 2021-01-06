@@ -57,7 +57,7 @@
 
             $resultString = [Convert]::ToBase64String($result);
             $DeploymentScriptOutputs['text'] = $resultString
-            $DeploymentScriptOutputs['connString'] = $connString
+            $DeploymentScriptOutputs['connString'] = $connStr
         ",
           "arguments": "[variables('connString')]",
           "timeout": "PT1H",
