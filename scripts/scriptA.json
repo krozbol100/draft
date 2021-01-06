@@ -63,7 +63,7 @@
             $DeploymentScriptOutputs['connString'] = $connStr
             $DeploymentScriptOutputs['sqlPassword'] = $sqlPassword
         ",
-          "arguments": "[concat(parameters('sqlServerName'),' ', parameters('sqlAdmin'), ' ', parameters('sqlPassword'), ' ',parameters('databaseName'))]",
+          "arguments": "[concat(parameters('sqlServerName'),' ', parameters('sqlAdmin'), ' ''', parameters('sqlPassword'), ''' ',parameters('databaseName'))]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
