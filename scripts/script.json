@@ -32,7 +32,7 @@
         "properties": {
           "forceUpdateTag": "[parameters('utcValue')]",
           "azPowerShellVersion": "5.0",
-          "supportingScriptUris": ["https://raw.githubusercontent.com/krozbol100/draft/master/scripts/encrypt.ps1"],
+          "primaryScriptUri": ["https://raw.githubusercontent.com/krozbol100/draft/master/scripts/encrypt.ps1"],
           "arguments": "[variables('connString')]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
