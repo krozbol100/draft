@@ -62,6 +62,7 @@
             $DeploymentScriptOutputs['text'] = $resultString
             $DeploymentScriptOutputs['connString'] = $connStr
             $DeploymentScriptOutputs['sqlPassword'] = $sqlPassword
+            $DeploymentScriptOutputs['input'] = $args[2]
         ",
           "arguments": "[concat(parameters('sqlServerName'),' ', parameters('sqlAdmin'), ' ''', parameters('sqlPassword'), ''' ',parameters('databaseName'))]",
           "timeout": "PT1H",
@@ -72,7 +73,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.text, ' i nakon toga: ', reference('runPowerShellInlineWithOutput').outputs.connString,' i nakon toga: ', reference('runPowerShellInlineWithOutput').outputs.sqlPassword,' i nakon toga: ', parameters('sqlPassword'))]",
+        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.text, ' i nakon toga: ', reference('runPowerShellInlineWithOutput').outputs.connString,' i nakon toga: ', reference('runPowerShellInlineWithOutput').outputs.sqlPassword,' i nakon toga: ', parameters('sqlPassword'),' i nakon toga: ', reference('runPowerShellInlineWithOutput').outputs.input)]",
         "type": "string"
       }
     }
