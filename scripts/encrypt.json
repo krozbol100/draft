@@ -53,7 +53,7 @@
             $DeploymentScriptOutputs['text'] = $resultString
             $DeploymentScriptOutputs['sql'] = $sqlPassword
         ",
-          "arguments": "[concat(variables('sqlServerName'),' ', variables('sqlAdmin'),' ', base64(variables('sqlPassword')),' ', variables('databaseName'))]",
+          "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin,' ', base64(parameters('connString').sqlPassword),' ', parameters('connString').databaseName)]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
@@ -62,7 +62,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.sql,' i onda ', variables('sqlPassword'))]",
+        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.sql,' i onda ', parameters('connString').sqlPassword)]",
         "type": "string"
       }
     }
