@@ -14,11 +14,11 @@
         "kind": "AzurePowerShell",
         "properties": {
           "forceUpdateTag": "[parameters('utcValue')]",
-          "azPowerShellVersion": "3.0",
+          "azPowerShellVersion": "5.0",
           "scriptContent": "
             param([string]$sqlServerName, [string]$sqlAdmin, [string]$sqlPassword, [string]$databaseName01, [string]$databaseName02)
-            #$sqlPassword = [Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($sqlPassword))
-            $sqlPassword = [Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($env:sqlPassword))
+            $sqlPassword = [Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($sqlPassword))
+            #$sqlPassword = [Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($env:sqlPassword))
             #$sqlPassword = $sqlPassword.substring(1,$sqlPassword.Length-2)
             #$sqlServerName = $args[0]
             #$sqlAdmin = $args[1]
@@ -54,11 +54,11 @@
             }
             $DeploymentScriptOutputs['conString1'] = $resultConString1
             $DeploymentScriptOutputs['conString2'] = $resultConString2
-            $DeploymentScriptOutputs['sql'] = $sqlPassword
-            $DeploymentScriptOutputs['envsql'] = $env:sqlPassword
-            $DeploymentScriptOutputs['envsubj'] = [Environment]::GetEnvironmentVariable('Subject')
-            $DeploymentScriptOutputs['envsecret'] = $env:Secret
-            $DeploymentScriptOutputs['envlist'] = dir env: | out-string
+            #$DeploymentScriptOutputs['sql'] = $sqlPassword
+            #$DeploymentScriptOutputs['envsql'] = $env:sqlPassword
+            #$DeploymentScriptOutputs['envsubj'] = [Environment]::GetEnvironmentVariable('Subject')
+            #$DeploymentScriptOutputs['envsecret'] = $env:Secret
+            #$DeploymentScriptOutputs['envlist'] = dir env: | out-string
             #$DeploymentScriptOutputs['connStr'] = $connStr
         ",
           "arguments": "[concat(
@@ -68,20 +68,19 @@
             parameters('connString').databaseName01,' ', 
             parameters('connString').databaseName02,' '
             )]",
-          "environmentVariables:":[
-              {
-                "name": "sqlPassword",
-                "value": "[base64(parameters('connString').sqlPassword)]"
-              },
-              {
-                "name": "Subject",
-                "value": "tekstic"
-              },
-              {
-                "name": "Secret",
-                "secretValue": "secret"
-              }
-          ],
+          // "environmentVariables:":[
+          //     {
+          //       "name": "sqlPassword",
+          //       "value": "[base64(parameters('connString').sqlPassword)]"
+          //     },
+          //     {
+          //       "name": "Subject",
+          //       "value": "tekstic"
+          //     },
+          //     {
+          //       "name": "Secret",
+          //       "secretValue": "secret"
+          //     }],
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
