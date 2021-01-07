@@ -4,9 +4,9 @@
     "parameters": {
         "connString": {
             "value": {
-                "sqlAdmin":"eSessionAzure",
-                "sqlPassword":"e$e$$ion@zure123!!",
-                "sqlServerName":"esession-sqlserver.database.windows.net",
+                "sqlAdmin":"esessiondbadmin",
+                "sqlPassword":"sif.ra123456",
+                "sqlServerName":"esession-6rg2p7gndocsg-sql",
                 "databaseName01":"esession",
                 "databaseName02":"esession-signalr"
             }
