@@ -9,7 +9,7 @@
       {
         "type": "Microsoft.Resources/deploymentScripts",
         "apiVersion": "2020-10-01",
-        "name": "runPowerShellInlineWithOutput",
+        "name": "encryptConnString",
         "location": "[resourceGroup().location]",
         "kind": "AzurePowerShell",
         "properties": {
@@ -58,7 +58,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
+        "value": "[reference('encryptConnString').outputs.text]",
         "type": "string"
       }
     }
