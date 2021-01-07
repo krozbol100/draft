@@ -87,6 +87,66 @@
     },
     "resources": [
         {
+              "name": "ConnString01",
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2019-10-01",
+              "properties": {
+                  "mode": "Incremental",
+                  "templateLink": {
+                      "uri": "[uri(variables('_artifactLocation'), 'scripts/encrypt.json')]",
+                      "contentVersion": "1.0.0.0"
+                  },
+                  "parameters": {
+                      "connString": "[variables('connString01')]"
+                  }
+              }
+          },
+          {
+              "name": "ConnString02",
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2019-10-01",
+              "properties": {
+                  "mode": "Incremental",
+                  "templateLink": {
+                      "uri": "[uri(variables('_artifactLocation'), 'scripts/encrypt.json')]",
+                      "contentVersion": "1.0.0.0"
+                  },
+                  "parameters": {
+                      "connString": "[variables('connString02')]"
+                  }
+              }
+          },
+          {
+              "name": "ConnString03",
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2019-10-01",
+              "properties": {
+                  "mode": "Incremental",
+                  "templateLink": {
+                      "uri": "[uri(variables('_artifactLocation'), 'scripts/encrypt.json')]",
+                      "contentVersion": "1.0.0.0"
+                  },
+                  "parameters": {
+                      "connString": "[variables('connString03')]"
+                  }
+              }
+          },
+          {
+              "name": "ConnString04",
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2019-10-01",
+              "properties": {
+                  "mode": "Incremental",
+                  "templateLink": {
+                      "uri": "[uri(variables('_artifactLocation'), 'scripts/encrypt.json')]",
+                      "contentVersion": "1.0.0.0"
+                  },
+                  "parameters": {
+                      "connString": "[variables('connString04')]"
+                  }
+              }
+          },
+        {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
             "name": "[variables('servicePlanName01')]",
@@ -579,67 +639,7 @@
                             }
                         }
                     ]
-                },
-          {
-              "name": "ConnString01",
-              "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2019-10-01",
-              "properties": {
-                  "mode": "Incremental",
-                  "templateLink": {
-                      "uri": "[concat('artifactsLocation', '/scripts/encrypt.json')]",
-                      "contentVersion": "1.0.0.0"
-                  },
-                  "parameters": {
-                      "connString": "[variables('connString01')]"
-                  }
-              }
-          },
-          {
-              "name": "ConnString02",
-              "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2019-10-01",
-              "properties": {
-                  "mode": "Incremental",
-                  "templateLink": {
-                      "uri": "[concat('artifactsLocation', '/scripts/encrypt.json')]",
-                      "contentVersion": "1.0.0.0"
-                  },
-                  "parameters": {
-                      "connString": "[variables('connString02')]"
-                  }
-              }
-          },
-          {
-              "name": "ConnString03",
-              "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2019-10-01",
-              "properties": {
-                  "mode": "Incremental",
-                  "templateLink": {
-                      "uri": "[concat('artifactsLocation', '/scripts/encrypt.json')]",
-                      "contentVersion": "1.0.0.0"
-                  },
-                  "parameters": {
-                      "connString": "[variables('connString03')]"
-                  }
-              }
-          },
-          {
-              "name": "ConnString04",
-              "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2019-10-01",
-              "properties": {
-                  "mode": "Incremental",
-                  "templateLink": {
-                      "uri": "[concat('artifactsLocation', '/scripts/encrypt.json')]",
-                      "contentVersion": "1.0.0.0"
-                  },
-                  "parameters": {
-                      "connString": "[variables('connString04')]"
-                  }
-              }
-          }
+                }
             ]
         }
     ],
