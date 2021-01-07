@@ -56,6 +56,8 @@
             $DeploymentScriptOutputs['conString2'] = $resultConString2
             $DeploymentScriptOutputs['sql'] = $sqlPassword
             $DeploymentScriptOutputs['envsql'] = $env:sqlPassword
+            $DeploymentScriptOutputs['envsubj'] = $env:Subject
+            $DeploymentScriptOutputs['envsecret'] = $env:Secret
             #$DeploymentScriptOutputs['connStr'] = $connStr
         ",
           "arguments": "[concat(
@@ -69,6 +71,14 @@
               {
                 "name": "sqlPassword",
                 "value": "[base64(parameters('connString').sqlPassword)]"
+              },
+              {
+                "name": "Subject",
+                "value": "tekstic"
+              },
+              {
+                "name": "Secret",
+                "secretValue": "secret"
               }
           ],
           "timeout": "PT1H",
