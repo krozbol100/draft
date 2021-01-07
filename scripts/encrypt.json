@@ -19,11 +19,11 @@
           "forceUpdateTag": "[parameters('utcValue')]",
           "azPowerShellVersion": "5.0",
           "scriptContent": "
-            #param([string] $sqlServerName, [string] $sqlAdmin, [string] $sqlPassword, [string] $databaseName)
-            $sqlServerName = $args[0]
-            $sqlAdmin = $args[1]
-            $sqlPassword = $args[2]
-            $databaseName = $args[3]
+            param([string]$sqlServerName, [string]$sqlAdmin, [string]$sqlPassword, [string]$databaseName)
+            #$sqlServerName = $args[0]
+            #$sqlAdmin = $args[1]
+            #$sqlPassword = $args[2]
+            #$databaseName = $args[3]
             $connStr = 'Server=tcp:' + $sqlServerName + ',1433;Initial Catalog=' + $databaseName + ';Persist Security Info=False;User ID=' + $sqlAdmin + ';Password=' + $sqlPassword + ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
             $key = [Byte[]](122, 2, 87, 224, 212, 156, 97, 98, 4, 1, 78, 92, 44, 43, 201, 14)
@@ -49,7 +49,7 @@
             $DeploymentScriptOutputs['text'] = $resultString
             $DeploymentScriptOutputs['sql'] = $sqlPassword
         ",
-          "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin, ' ', concat('\\\"', parameters('connString').sqlPassword, '\\\"'), ' ',parameters('connString').databaseName)]",
+          "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin, ' ', parameters('connString').sqlPassword, ' ',parameters('connString').databaseName)]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
