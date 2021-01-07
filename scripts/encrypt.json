@@ -5,12 +5,6 @@
       "connString": {"type": "secureObject"},
       "utcValue": {"type": "string", "defaultValue": "[utcNow()]"}
     },
-    "variables": {
-        "sqlServerName": "[concat('''',parameters('connString').sqlServerName,'''')]",
-        "sqlAdmin": "[concat('''',parameters('connString').sqlAdmin,'''')]",
-        "sqlPassword": "[concat('''',parameters('connString').sqlPassword,'''')]",
-        "databaseName": "[concat('''',parameters('connString').databaseName,'''')]"
-    },
     "resources": [
       {
         "type": "Microsoft.Resources/deploymentScripts",
@@ -52,8 +46,8 @@
 
             $resultString = [Convert]::ToBase64String($result);
             $DeploymentScriptOutputs['text'] = $resultString
-            $DeploymentScriptOutputs['sql'] = $sqlPassword
-            $DeploymentScriptOutputs['connStr'] = $connStr
+            #$DeploymentScriptOutputs['sql'] = $sqlPassword
+            #$DeploymentScriptOutputs['connStr'] = $connStr
         ",
           "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin,' ', base64(parameters('connString').sqlPassword),' ', parameters('connString').databaseName)]",
           "timeout": "PT1H",
@@ -64,7 +58,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.sql,' i onda ', parameters('connString').sqlPassword, ' i connstr: ', reference('runPowerShellInlineWithOutput').outputs.connStr)]",
+        "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
         "type": "string"
       }
     }
