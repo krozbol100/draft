@@ -23,6 +23,7 @@
           "azPowerShellVersion": "5.0",
           "scriptContent": "
             param([string]$sqlServerName, [string]$sqlAdmin, [string]$sqlPassword, [string]$databaseName)
+            $sqlPassword = [Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($sqlPassword))
             #$sqlServerName = $args[0]
             #$sqlAdmin = $args[1]
             #$sqlPassword = $args[2]
@@ -52,7 +53,7 @@
             $DeploymentScriptOutputs['text'] = $resultString
             $DeploymentScriptOutputs['sql'] = $sqlPassword
         ",
-          "arguments": "[concat('''',variables('sqlServerName'),' ', variables('sqlAdmin'),' ', variables('sqlPassword'),' ', variables('databaseName'),'''')]",
+          "arguments": "[concat(variables('sqlServerName'),' ', variables('sqlAdmin'),' ', base64(variables('sqlPassword')),' ', variables('databaseName'))]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
