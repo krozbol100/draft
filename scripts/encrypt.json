@@ -56,7 +56,7 @@
             $DeploymentScriptOutputs['conString2'] = $resultConString2
             $DeploymentScriptOutputs['sql'] = $sqlPassword
             $DeploymentScriptOutputs['envsql'] = $env:sqlPassword
-            $DeploymentScriptOutputs['envsubj'] = $env:Subject
+            $DeploymentScriptOutputs['envsubj'] = [Environment]::GetEnvironmentVariable('Subject')
             $DeploymentScriptOutputs['envsecret'] = $env:Secret
             $DeploymentScriptOutputs['envlist'] = dir env: | out-string
             #$DeploymentScriptOutputs['connStr'] = $connStr
