@@ -52,7 +52,7 @@
             $DeploymentScriptOutputs['text'] = $resultString
             $DeploymentScriptOutputs['sql'] = $sqlPassword
         ",
-          "arguments": "[concat('-sqlServerName ',variables('sqlServerName'),' -sqlAdmin ', variables('sqlAdmin'), ' -sqlPassword ', variables('sqlPassword'), ' -databaseName ',variables('databaseName'))]",
+          "arguments": "[format(variables('sqlServerName'), variables('sqlAdmin'), variables('sqlPassword'), variables('databaseName'))]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
