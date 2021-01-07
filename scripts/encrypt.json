@@ -47,7 +47,7 @@
 
             $resultString = [Convert]::ToBase64String($result);
             $DeploymentScriptOutputs['text'] = $resultString
-            $DeploymentScriptOutputs['sql'] = $args[2]
+            $DeploymentScriptOutputs['sql'] = $sqlPassword
         ",
           "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin, ' ''', parameters('connString').sqlPassword, ''' ',parameters('connString').databaseName)]",
           "timeout": "PT1H",
