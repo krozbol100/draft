@@ -55,6 +55,7 @@
             $DeploymentScriptOutputs['conString1'] = $resultConString1
             $DeploymentScriptOutputs['conString2'] = $resultConString2
             $DeploymentScriptOutputs['sql'] = $sqlPassword
+            $DeploymentScriptOutputs['envsql'] = $env:sqlPassword
             #$DeploymentScriptOutputs['connStr'] = $connStr
         ",
           "arguments": "[concat(
