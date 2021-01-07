@@ -256,7 +256,7 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/sites', variables('siteName03'))]",
                         "[concat('Microsoft.Web/sites/', variables('siteName03'), '/Extensions/MSDeploy')]",
-                        "[resourceId('Microsoft.Resources/deployments','ConnString01').output.text]"
+                        "[resourceId('Microsoft.Resources/deployments','ConnString01').outputs.text]"
                     ],
                     "tags": {
                         "displayName": "[concat(variables('siteName03'), '_ConnectionString_' ,variables('databaseName01'))]"
@@ -266,7 +266,7 @@
                         "SONARQUBE_JDBC_USERNAME": "[parameters('sqlServerAdministratorUsername')]",
                         "SONARQUBE_JDBC_PASSWORD": "[parameters('sqlServerAdministratorPassword')]",
                         "sonar.path.data": "/home/sonarqube/data",
-                        "ConnectionString": "[reference('ConnString01').output.text]"
+                        "ConnectionString": "[reference('ConnString01').outputs.text]"
                     }
                 }
             ]
