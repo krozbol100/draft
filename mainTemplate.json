@@ -132,8 +132,7 @@
             "name": "[variables('siteName01')]",
             "location": "[parameters('locationLinux')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName01'))]",
-                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName01'))]"
             ],
             "kind": "app,linux,container",
             "properties": {
@@ -168,8 +167,7 @@
             "name": "[variables('siteName02')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
-                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]"
             ],
             "kind": "app",
             "properties": {
@@ -212,13 +210,18 @@
             "name": "[variables('siteName03')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
-                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]"
             ],
             "kind": "app",
             "properties": {
                 "siteConfig": {
-                    "netFrameworkVersion": "v4.0"
+                    "netFrameworkVersion": "v4.0",
+                    "appSettings": [
+                        {
+                            "name": "ConnectionStrings:UpravljanjeKorisnicimaDatabase",
+                            "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName01'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                        }
+                    ]
                 },
                 "name": "[variables('siteName03')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
@@ -240,21 +243,6 @@
                         "dbType": "None",
                         "connectionString": ""
                     }
-                },
-                {
-                    "type": "config",
-                    "apiVersion": "2020-06-01",
-                    "name": "appsettings",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites', variables('siteName03'))]",
-                        "[concat('Microsoft.Web/sites/', variables('siteName03'), '/Extensions/MSDeploy')]"
-                    ],
-                    "tags": {
-                        "displayName": "[concat(variables('siteName03'), '_ConnectionString_' ,variables('databaseName01'))]"
-                    },
-                    "properties": {
-                        "ConnectionStrings": "[concat('Server=tcp:', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('databaseName01'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
-                    }
                 }
             ]
         },
@@ -264,14 +252,23 @@
             "name": "[variables('siteName04')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
-                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]"
             ],
             "kind": "app",
             "properties": {
                 "siteConfig": {
                     "netFrameworkVersion": "v4.0",
                     "webSocketsEnabled": true,
+                    "appSettings": [
+                        {
+                            "name": "ConnectionStrings:RenditionQueueServerConnection",
+                            "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName03'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                        },
+                        {
+                            "name": "ConnectionStrings:DmsQueueServerConnection",
+                            "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName04'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                        }
+                    ],
                     "metadata": [
                         {
                             "name": "CURRENT_STACK",
@@ -299,25 +296,6 @@
                         "dbType": "None",
                         "connectionString": ""
                     }
-                },
-                {
-                    "type": "config",
-                    "apiVersion": "2020-06-01",
-                    "name": "appsettings",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites', variables('siteName04'))]",
-                        "[concat('Microsoft.Web/sites/', variables('siteName04'), '/Extensions/MSDeploy')]"
-                    ],
-                    "tags": {
-                        "displayName": "[concat(variables('siteName04'), '_ConnectionString_' ,variables('databaseName03'))]"
-                    },
-                    "properties": {
-                        "SONARQUBE_JDBC_URL_03": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName03'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
-                        "SONARQUBE_JDBC_URL_04": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName04'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
-                        "SONARQUBE_JDBC_USERNAME": "[parameters('sqlServerAdministratorUsername')]",
-                        "SONARQUBE_JDBC_PASSWORD": "[parameters('sqlServerAdministratorPassword')]",
-                        "sonar.path.data": "/home/sonarqube/data"
-                    }
                 }
             ]
         },
@@ -328,12 +306,22 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]",
-                "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]"
+                "Microsoft.Resources/deployments/ConnString01"
             ],
             "properties": {
                 "siteConfig": {
                     "netFrameworkVersion": "v4.0",
                     "webSocketsEnabled": true,
+                    "appSettings": [
+                        {
+                            "name": "ConnectionStrings:defaultConnection",
+                            "value": "[reference('ConnString01').outputs.result01.value]"
+                        },
+                        {
+                            "name": "SignalRData:ConnectionString",
+                            "value": "[reference('ConnString02').outputs.result02.value]"
+                        } 
+                    ],
                     "metadata": [
                         {
                             "name": "CURRENT_STACK",
@@ -360,28 +348,6 @@
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-core.zip')]",
                         "dbType": "None",
                         "connectionString": ""
-                    }
-                },
-                {
-                    "type": "config",
-                    "apiVersion": "2020-06-01",
-                    "name": "appsettings",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites', variables('siteName05'))]",
-                        "[concat('Microsoft.Web/sites/', variables('siteName05'), '/Extensions/MSDeploy')]",
-                        "Microsoft.Resources/deployments/ConnString01"
-                    ],
-                    "tags": {
-                        "displayName": "[concat(variables('siteName05'), '_ConnectionString_' ,variables('databaseName01'))]"
-                    },
-                    "properties": {
-                        "SONARQUBE_JDBC_URL_01": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName01'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
-                        "SONARQUBE_JDBC_URL_02": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers',variables('sqlServerName'))).fullyQualifiedDomainName, ';databaseName=', variables('databaseName02'), ';encrypt=true;trustServerCertificate=false;hostNameInCertificate=', replace(reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName'))).fullyQualifiedDomainName, concat(variables('sqlServerName'), '.'), '*.'), ';loginTimeout=30;')]",
-                        "SONARQUBE_JDBC_USERNAME": "[parameters('sqlServerAdministratorUsername')]",
-                        "SONARQUBE_JDBC_PASSWORD": "[parameters('sqlServerAdministratorPassword')]",
-                        "sonar.path.data": "/home/sonarqube/data",
-                        "ConnectionString1": "[reference('ConnString01').outputs.result01]",
-                        "ConnectionString2": "[reference('ConnString01').outputs.result02]"
                     }
                 }
             ]

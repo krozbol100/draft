@@ -8,9 +8,7 @@
                 "sqlPassword":"e$e$$ion@zure123!!",
                 "sqlServerName":"esession-sqlserver.database.windows.net",
                 "databaseName01":"esession",
-                "databaseName02":"esession-signalr",
-                "databaseName03":"esession-rendition",
-                "databaseName04":"esession-dmsqueue"
+                "databaseName02":"esession-signalr"
             }
         }
     }
