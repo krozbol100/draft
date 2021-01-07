@@ -6,7 +6,8 @@
       "utcValue": {"type": "string", "defaultValue": "[utcNow()]"}
     },
     "variables": {
-        "pass": "[concat('''',parameters('connString').sqlPassword,'''')]"
+        "pass": "[concat('''',parameters('connString').sqlPassword,'''')]",
+        "singleQuote": "'"
     },
     "resources": [
       {
@@ -49,7 +50,7 @@
             $DeploymentScriptOutputs['text'] = $resultString
             $DeploymentScriptOutputs['sql'] = $sqlPassword
         ",
-          "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin, ' ', parameters('connString').sqlPassword, ' ',parameters('connString').databaseName)]",
+          "arguments": "[concat(parameters('connString').sqlServerName,' ', parameters('connString').sqlAdmin, ' ', variables('singleQuote'), string(parameters('connString').sqlPassword), variables('singleQuote'), ' ',parameters('connString').databaseName)]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
           "retentionInterval": "P1D"
