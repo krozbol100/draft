@@ -61,7 +61,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.sql,' i onda ', variables('pass'))]",
+        "value": "[concat(reference('runPowerShellInlineWithOutput').outputs.sql,' i onda ', variables('sqlPassword'))]",
         "type": "string"
       }
     }
