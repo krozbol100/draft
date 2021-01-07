@@ -58,21 +58,24 @@
                 "sqlPassword":"[parameters('sqlServerAdministratorPassword')]",
                 "sqlServerName":"[variables('sqlServerName')]",
                 "databaseName":"[variables('databaseName01')]"
-            },
+            }
+        },
         "connString02": {
             "value": {
                 "sqlAdmin":"[parameters('sqlServerAdministratorUsername')]",
                 "sqlPassword":"[parameters('sqlServerAdministratorPassword')]",
                 "sqlServerName":"[variables('sqlServerName')]",
                 "databaseName":"[variables('databaseName02')]"
-            },
+            }
+        },
         "connString03": {
             "value": {
                 "sqlAdmin":"[parameters('sqlServerAdministratorUsername')]",
                 "sqlPassword":"[parameters('sqlServerAdministratorPassword')]",
                 "sqlServerName":"[variables('sqlServerName')]",
                 "databaseName":"[variables('databaseName03')]"
-            },
+            }
+        },
         "connString04": {
             "value": {
                 "sqlAdmin":"[parameters('sqlServerAdministratorUsername')]",
