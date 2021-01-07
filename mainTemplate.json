@@ -256,7 +256,7 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/sites', variables('siteName03'))]",
                         "[concat('Microsoft.Web/sites/', variables('siteName03'), '/Extensions/MSDeploy')]",
-                        "[resourceId('Microsoft.Resources/deployments','ConnString01').outputs.text]"
+                        "Microsoft.Resources/deployments/ConnString01"
                     ],
                     "tags": {
                         "displayName": "[concat(variables('siteName03'), '_ConnectionString_' ,variables('databaseName01'))]"
