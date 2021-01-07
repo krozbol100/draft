@@ -319,7 +319,7 @@
                         },
                         {
                             "name": "SignalRData:ConnectionString",
-                            "value": "[reference('ConnString02').outputs.result02.value]"
+                            "value": "[reference('ConnString01').outputs.result02.value]"
                         } 
                     ],
                     "metadata": [
