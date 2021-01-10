@@ -1,0 +1,115 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerAdministratorUsername": {
+            "defaultValue": "esessiondbadmin",
+            "minLength": 1,
+            "type": "String",
+            "metadata": {
+                "description": "Azure SQL Server Administrator Username."
+            }
+        },
+        "sqlServerAdministratorPassword": {
+            "defaultValue": "P@ssw0rd",
+            "minLength": 8,
+            "maxLength": 128,
+            "type": "SecureString",
+            "metadata": {
+                "description": "Azure SQL Server Administrator Password"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all the resources."
+            }
+        }
+    },
+    "variables": {
+        "siteName": "[concat('esession-', uniqueString(resourceGroup().id))]",
+        "siteName02": "[concat('esession-app-', uniqueString(resourceGroup().id))]",
+        "siteName03": "[concat('esession-core-', uniqueString(resourceGroup().id))]",
+        "servicePlanName02": "[concat(variables('siteName'), '-asp')]",
+        "_artifactLocation": "[deployment().properties.templateLink.uri]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('servicePlanName02')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "D1",
+                "tier": "Shared",
+                "size": "D1",
+                "family": "D",
+                "capacity": 0
+            },
+            "kind": "app",
+            "properties": {
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('siteName02')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName02'))]"
+            ],
+            "kind": "app",
+            "properties": {
+                "siteConfig": {
+                    "netFrameworkVersion": "v4.0",
+                    "webSocketsEnabled": true,
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ]
+                },
+                "name": "[variables('siteName02')]",
+                "serverFarmId": "[variables('servicePlanName02')]"
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2015-08-01",
+                    "name": "MSDeploy",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName02'))]"
+                    ],
+                    "tags": {
+                        "displayName": "webDeploy"
+                    },
+                    "properties": {
+                        //"packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
+                        "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-session-app.zip",
+                        "dbType": "None",
+                        "connectionString": "",
+                        "setParameters": {
+                            "hostname": "[variables('siteName03')]"
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {
+        "siteName02": {
+            "value": "[concat(variables('siteName02'), '.azurewebsites.net')]",
+            "type": "string"
+        }
+    }
+}

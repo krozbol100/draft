@@ -312,6 +312,13 @@
                 "siteConfig": {
                     "netFrameworkVersion": "v4.0",
                     "webSocketsEnabled": true,
+                    "cors": {
+                        "allowedOrigins": [
+                                "[concat('http://', variables('siteName02'),'.azurewebsites.net')]",
+                                "[concat('https://', variables('siteName02'),'.azurewebsites.net')]"
+                            ],
+                            "supportCredentials": true
+                        },
                     "appSettings": [
                         {
                             "name": "ConnectionStrings:defaultConnection",
