@@ -100,7 +100,7 @@
                         "dbType": "None",
                         "connectionString": "",
                         "setParameters": {
-                            "hostname": "[variables('siteName03')]"
+                            "New eSession Hostname": "[variables('siteName03')]"
                     }
                 }
                 }
