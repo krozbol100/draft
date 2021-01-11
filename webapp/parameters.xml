@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<parameters >
-
-  <parameter name="New eSession Hostname" description="New eSession core hostname" defaultValue="esession-core" tags="">
-    <parameterEntry kind="TextFile" scope="assets\\config.js" match="@@replaceme@@" />
-  </parameter>
-  
- </parameters>

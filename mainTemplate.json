@@ -199,7 +199,10 @@
                     "properties": {
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
                         "dbType": "None",
-                        "connectionString": ""
+                        "connectionString": "",
+                        "setParameters": {
+                            "New eSession Hostname": "[variables('siteName03')]"
+                        }
                     }
                 }
             ]
