@@ -100,8 +100,8 @@
                         "dbType": "None",
                         "connectionString": "",
                         "setParameters": {
-                            "eSession Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=esession-a5htf374qvxlg-sql.database.windows.net,1433;Initial Catalog=esessionNode;User Id=esessiondbadmin;Password=e$e$$ion@zure123!!;')]",
-                            "SignalR Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=esession-a5htf374qvxlg-sql.database.windows.net,1433;Initial Catalog=esessionSignalR;User Id=esessiondbadmin;Password=e$e$$ion@zure123!!;')]"
+                            "eSession Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=esessionNode;User Id=esessiondbadmin;Password=e$e$$ion@zure123!!;')]",
+                            "SignalR Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=esessionSignalR;User Id=esessiondbadmin;Password=e$e$$ion@zure123!!;')]"
                     }
                 }
                 }
