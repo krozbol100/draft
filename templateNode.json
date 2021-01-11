@@ -96,11 +96,12 @@
                     },
                     "properties": {
                         //"packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
-                        "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-session-app-01.zip",
+                        "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-esession-core-01.zip",
                         "dbType": "None",
                         "connectionString": "",
                         "setParameters": {
-                            "New eSession Hostname": "[variables('siteName03')]"
+                            "eSession Admin Connection String": "[concat('Server=tcp:esession-a5htf374qvxlg-sql.database.windows.net,1433;Initial Catalog=esessionNode;Persist Security Info=False;User ID=esessiondbadmin;Password=e$e$$ion@zure123!!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+                            "SignalR Admin Connection String": "[concat('Server=tcp:esession-a5htf374qvxlg-sql.database.windows.net,1433;Initial Catalog=esessionNode;Persist Security Info=False;User ID=esessiondbadmin;Password=e$e$$ion@zure123!!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
                     }
                 }
                 }
