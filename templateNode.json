@@ -70,14 +70,15 @@
             "kind": "app",
             "properties": {
                 "siteConfig": {
-                    "netFrameworkVersion": "v4.0",
-                    "webSocketsEnabled": true,
-                    "metadata": [
-                        {
-                            "name": "CURRENT_STACK",
-                            "value": "dotnetcore"
-                        }
-                    ]
+                    //"netFrameworkVersion": "v4.0",
+                    "use32BitWorkerProcess": false,
+                    "webSocketsEnabled": true// ,
+                    // "metadata": [
+                    //     {
+                    //         "name": "CURRENT_STACK",
+                    //         "value": "dotnetcore"
+                    //     }
+                    // ]
                 },
                 "name": "[variables('siteName02')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
