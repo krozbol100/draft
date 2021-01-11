@@ -97,8 +97,8 @@
                     "properties": {
                         //"packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
                         "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-esession-core-01.zip",
-                        "dbType": "None",
-                        "connectionString": "",
+                        "dbType": "SQL",
+                        "connectionString": "[concat('Data Source=tcp:esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=master;User Id=esessiondbadmin;Password=sif.ra123456;')]",
                         "setParameters": {
                             "eSession Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=esessionNode;User Id=esessiondbadmin;Password=sif.ra123456;')]",
                             "SignalR Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=esessionSignalR;User Id=esessiondbadmin;Password=sif.ra123456;')]"
