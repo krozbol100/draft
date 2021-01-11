@@ -71,7 +71,7 @@
             "properties": {
                 "siteConfig": {
                     //"netFrameworkVersion": "v4.0",
-                    "use32BitWorkerProcess": false,
+                    //"use32BitWorkerProcess": false,
                     "webSocketsEnabled": true// ,
                     // "metadata": [
                     //     {
