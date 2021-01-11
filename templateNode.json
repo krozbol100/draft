@@ -96,7 +96,7 @@
                     },
                     "properties": {
                         //"packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
-                        "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-session-app.zip",
+                        "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-session-app-01.zip",
                         "dbType": "None",
                         "connectionString": "",
                         "setParameters": {
