@@ -70,15 +70,14 @@
             "kind": "app",
             "properties": {
                 "siteConfig": {
-                    //"netFrameworkVersion": "v4.0",
-                    //"use32BitWorkerProcess": false,
-                    "webSocketsEnabled": true// ,
-                    // "metadata": [
-                    //     {
-                    //         "name": "CURRENT_STACK",
-                    //         "value": "dotnetcore"
-                    //     }
-                    // ]
+                    "netFrameworkVersion": "v4.0",
+                    "webSocketsEnabled": true,
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ]
                 },
                 "name": "[variables('siteName02')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
@@ -97,7 +96,7 @@
                     },
                     "properties": {
                         //"packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
-                        "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-esession-core-01.zip",
+                        "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-esession-core-02.zip",
                         "dbType": "SQL",
                         "connectionString": "[concat('Data Source=tcp:esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=master;User Id=esessiondbadmin;Password=sif.ra123456;')]",
                         "setParameters": {
