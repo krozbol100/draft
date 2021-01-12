@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<parameters >
+
+  <parameter name="eSession Admin Connection String" description="Connection string to Import the Dacpac for eSession Database" tags="Hidden, SQLConnectionString, NoStore">
+    <parameterEntry kind="ProviderPath" scope="dbDacFx" match="DemoeSession.dacpac" />
+  </parameter>
+  <parameter name="SignalR Admin Connection String" description="Connection string to Import the Dacpac for SignalR Database" tags="Hidden, SQLConnectionString, NoStore">
+    <parameterEntry kind="ProviderPath" scope="dbDacFx" match="DemoeSession_SignalR.dacpac" />
+  </parameter>
+  <parameter name="Application Path" description="Full site path where you would like to install your application (i.e., Default Web Site/Content)" defaultValue="Default Web Site/Content" tags="iisapp">
+    <parameterEntry type="ProviderPath" scope="iisapp" match="WebSite" />
+  </parameter>
+  
+ </parameters>

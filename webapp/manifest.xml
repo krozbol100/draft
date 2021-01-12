@@ -1,0 +1,5 @@
+<MSDeploy.iisApp> 
+  <iisApp path="Content/WebSite" /> 
+  <dbDacFx path="DemoeSession.dacpac" IncludeData="True" />
+  <dbDacFx path="DemoeSession_SignalR.dacpac" IncludeData="True" />
+</MSDeploy.iisApp>

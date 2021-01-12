@@ -197,7 +197,7 @@
                         "displayName": "webDeploy"
                     },
                     "properties": {
-                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
+                        "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-app.zip')]",
                         "dbType": "None",
                         "connectionString": "",
                         "setParameters": {
