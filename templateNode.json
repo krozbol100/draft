@@ -120,7 +120,7 @@
         },
         "publishingAll": {
             "value": "[reference(variables('siteName02'))]",
-            "type": "object" 
+            "type": "object"
         },
         "username": {
             "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties.publishingUserName]",
