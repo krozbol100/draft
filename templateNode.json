@@ -31,8 +31,8 @@
         "siteName": "[concat('esession-', uniqueString(resourceGroup().id))]",
         "siteName02": "[concat('esession-app-', uniqueString(resourceGroup().id))]",
         "siteName03": "[concat('esession-core-', uniqueString(resourceGroup().id))]",
-        "servicePlanName02": "[concat(variables('siteName'), '-asp')]",
-        "_artifactLocation": "[deployment().properties.templateLink.uri]"
+        "servicePlanName02": "[concat(variables('siteName'), '-asp')]"//,
+        //"_artifactLocation": "[deployment().properties.templateLink.uri]"
     },
     "resources": [
         {
@@ -114,21 +114,33 @@
             "value": "[concat(variables('siteName02'), '.azurewebsites.net')]",
             "type": "string"
         },
-        "publishing": {
-            "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties]",
-            "type": "object"
-        },
-        "publishingAll": {
-            "value": "[reference(concat('Microsoft.Web/sites/config/', variables('siteName02')))]",
-            "type": "object"
-        },
-        "username": {
-            "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties.publishingUserName]",
+        // "publishing": {
+        //     "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties]",
+        //     "type": "object"
+        // },
+        // "publishingAll": {
+        //     "value": "[reference(variables('siteName02'))]",
+        //     "type": "object"
+        // },
+        "publishingFtps": {
+            "value": "[reference(variables('siteName02')).ftpsHostName]",
             "type": "string"
         },
-        "password": {
+        "publishingUsername": {
+            "value": "[reference(variables('siteName02')).ftpUserName]",
+            "type": "string"
+        },
+        "publishingPassword": {
             "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties.publishingPassword]",
             "type": "string"
-        }
+        }//,
+        // "username": {
+        //     "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties.publishingUserName]",
+        //     "type": "string"
+        // },
+        // "password": {
+        //     "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties.publishingPassword]",
+        //     "type": "string"
+        // }
     }
 }
