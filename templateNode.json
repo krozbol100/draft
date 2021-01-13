@@ -119,7 +119,7 @@
             "type": "object"
         },
         "publishingAll": {
-            "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'hostNameBindings'), '2016-08-01').properties]",
+            "value": "[reference(concat('Microsoft.Web/sites/config', variables('siteName02')))]",
             "type": "object"
         },
         "username": {
