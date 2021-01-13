@@ -119,7 +119,7 @@
             "type": "object"
         },
         "publishingAll": {
-            "value": "[reference(concat('Microsoft.Web/sites/config', variables('siteName02')))]",
+            "value": "[reference(variables('siteName02'))]",
             "type": "object" 
         },
         "username": {
