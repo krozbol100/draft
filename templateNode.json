@@ -95,7 +95,7 @@
                         "displayName": "webDeploy"
                     },
                     "properties": {
-                        //"packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-session-app.zip')]",
+                        //"packageUri": "[uri(variables('_artifactLocation'),'webapp/wwwroot-session-app.zip')]",
                         "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-esession-core.zip",
                         "dbType": "SQL",
                         "connectionString": "[concat('Data Source=tcp:esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=master;User Id=esessiondbadmin;Password=sif.ra123456;')]",
