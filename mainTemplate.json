@@ -2,6 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "newEmailAdminAccount": {
+            "defaultValue": "sadmir.duric@comtrade.com",
+            "type": "String",
+            "metadata": {
+                "description": "Email address for Admin User. Very important that this is a valid Azure AD account. Otherwise, login will not work."
+            }
+        },
         "sqlServerAdministratorUsername": {
             "defaultValue": "esessiondbadmin",
             "minLength": 1,
@@ -49,9 +56,9 @@
         "servicePlanName01": "[concat(variables('siteName'), '-linux')]",
         "servicePlanName02": "[concat(variables('siteName'), '-asp')]",
         "sqlDatabaseSkuSizeGB": 16,
-        "_artifactsLocationSasToken": "?sv=2019-12-12&ss=bfqt&srt=co&sp=rwdlacupx&se=2024-01-04T22:38:57Z&st=2021-01-04T14:38:57Z&spr=https&sig=tce9g032%2FrLzoVlrtog%2BKr%2BtynJ5P%2FDlUtbmk%2B6qr48%3D",
+        //"_artifactsLocationSasToken": "?sv=2019-12-12&ss=bfqt&srt=co&sp=rwdlacupx&se=2024-01-04T22:38:57Z&st=2021-01-04T14:38:57Z&spr=https&sig=tce9g032%2FrLzoVlrtog%2BKr%2BtynJ5P%2FDlUtbmk%2B6qr48%3D",
         "_artifactLocation": "[deployment().properties.templateLink.uri]",
-        "_artifactLocationBacpac": "https://esession.blob.core.windows.net/bacpacfiles/",
+        //"_artifactLocationBacpac": "https://esession.blob.core.windows.net/bacpacfiles/",
         "connString01": {
             "value": {
                 "sqlAdmin":"[parameters('sqlServerAdministratorUsername')]",
@@ -220,10 +227,10 @@
                 "siteConfig": {
                     "netFrameworkVersion": "v4.0",
                     "appSettings": [
-                        {
-                            "name": "ConnectionStrings:UpravljanjeKorisnicimaDatabase",
-                            "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName01'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
-                        }
+                        // {
+                        //     "name": "ConnectionStrings:UpravljanjeKorisnicimaDatabase",
+                        //     "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName01'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                        // }
                     ]
                 },
                 "name": "[variables('siteName03')]",
@@ -243,8 +250,11 @@
                     },
                     "properties": {
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-user.zip')]",
-                        "dbType": "None",
-                        "connectionString": ""
+                        "dbType": "SQL",
+                        "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "setParameters": {
+                            "New eSession Connection String": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName01'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                        }
                     }
                 }
             ]
@@ -263,14 +273,14 @@
                     "netFrameworkVersion": "v4.0",
                     "webSocketsEnabled": true,
                     "appSettings": [
-                        {
-                            "name": "ConnectionStrings:RenditionQueueServerConnection",
-                            "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName03'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
-                        },
-                        {
-                            "name": "ConnectionStrings:DmsQueueServerConnection",
-                            "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName04'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
-                        }
+                        // {
+                        //     "name": "ConnectionStrings:RenditionQueueServerConnection",
+                        //     "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName03'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                        // },
+                        // {
+                        //     "name": "ConnectionStrings:DmsQueueServerConnection",
+                        //     "value": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName04'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
+                        // }
                     ],
                     "metadata": [
                         {
@@ -289,15 +299,28 @@
                     "name": "MSDeploy",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites/', variables('siteName04'))]"
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName04'))]",
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName02'))]"
                     ],
                     "tags": {
                         "displayName": "webDeploy"
                     },
                     "properties": {
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-rendition.zip')]",
-                        "dbType": "None",
-                        "connectionString": ""
+                        "dbType": "SQL",
+                        "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "setParameters": {
+                            "New eSession Admin Email": "[parameters('newEmailAdminAccount')]",
+                            "New eSession Rest hostname": "[variables('siteName01')]",
+                            "New eSession Rendition connString": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName03'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+                            "New eSession DMS_queue connString": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName04'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+                            "DmsRenditions Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',variables('databaseName03'),';User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                            "dms_queue Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',variables('databaseName04'),';User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                            "New eSession FTPS Hostname": "[reference(variables('siteName02')).ftpsHostName]",
+                            "New eSession FTPS Username": "[reference(variables('siteName02')).ftpUserName]",
+                            "New eSession FTPS Password": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties.publishingPassword]",
+                            "New eSession FTPS Domain": "[variables('siteName02')]"
+                        }
                     }
                 }
             ]
@@ -323,14 +346,14 @@
                             "supportCredentials": true
                         },
                     "appSettings": [
-                        {
-                            "name": "ConnectionStrings:defaultConnection",
-                            "value": "[reference('ConnString01').outputs.result01.value]"
-                        },
-                        {
-                            "name": "SignalRData:ConnectionString",
-                            "value": "[reference('ConnString01').outputs.result02.value]"
-                        } 
+                        // {
+                        //     "name": "ConnectionStrings:defaultConnection",
+                        //     "value": "[reference('ConnString01').outputs.result01.value]"
+                        // },
+                        // {
+                        //     "name": "SignalRData:ConnectionString",
+                        //     "value": "[reference('ConnString01').outputs.result02.value]"
+                        // } 
                     ],
                     "metadata": [
                         {
@@ -349,15 +372,28 @@
                     "name": "MSDeploy",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites/', variables('siteName05'))]"
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName05'))]",
+                        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName01'))]",
+                        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02'))]"
                     ],
                     "tags": {
                         "displayName": "webDeploy"
                     },
                     "properties": {
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-core.zip')]",
-                        "dbType": "None",
-                        "connectionString": ""
+                        "dbType": "SQL",
+                        "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "setParameters": {
+                            "New eSession Default connString": "[reference('ConnString01').outputs.result01.value]",
+                            "New eSession SignalR connString": "[reference('ConnString01').outputs.result02.value]",
+                            "New eSession App hostname": "[variables('siteName02')]",
+                            "New eSession Core hostname": "[variables('siteName05')]",
+                            "New eSession Rest hostname": "[variables('siteName01')]",
+                            "New eSession User hostname": "[variables('siteName03')]",
+                            "New eSession Rendition hostname": "[variables('siteName04')]",
+                            "eSession Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',variables('databaseName01'),';User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                            "SignalR Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',variables('databaseName02'),';User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]"
+                    }
                     }
                 }
             ]
@@ -406,25 +442,25 @@
                         "collation": "SQL_Latin1_General_CP1_CI_AS",
                         "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
                         "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
-                    },
-                    "resources": [
-                        {
-                            "type": "extensions",
-                            "apiVersion": "2014-04-01",
-                            "name": "Import",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName01'))]"
-                            ],
-                            "properties": {
-                                "operationMode": "Import",
-                                "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "SharedAccessKey",
-                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
-                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'eSession-2020-12-31-11-2.bacpac')]"
-                            }
-                        }
-                    ]
+                    }//,
+                    // "resources": [
+                    //     {
+                    //         "type": "extensions",
+                    //         "apiVersion": "2014-04-01",
+                    //         "name": "Import",
+                    //         "dependsOn": [
+                    //             "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName01'))]"
+                    //         ],
+                    //         "properties": {
+                    //             "operationMode": "Import",
+                    //             "storageKey": "[variables('_artifactsLocationSasToken')]",
+                    //             "storageKeyType": "SharedAccessKey",
+                    //             "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                    //             "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                    //             "storageUri": "[uri(variables('_artifactLocationBacpac'), 'eSession-2020-12-31-11-2.bacpac')]"
+                    //         }
+                    //     }
+                    // ]
                 },
                 {
                     "type": "databases",
@@ -445,26 +481,26 @@
                         "collation": "SQL_Latin1_General_CP1_CI_AS",
                         "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
                         "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
-                    },
-                    "resources": [
-                        {
-                            "type": "extensions",
-                            "apiVersion": "2014-04-01",
-                            "name": "Import",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02'))]",
-                                "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName01'), 'Import')]"
-                            ],
-                            "properties": {
-                                "operationMode": "Import",
-                                "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "SharedAccessKey",
-                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
-                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'SignalR-2020-12-31-11-16.bacpac')]"
-                            }
-                        }
-                    ]
+                    }//,
+                    // "resources": [
+                    //     {
+                    //         "type": "extensions",
+                    //         "apiVersion": "2014-04-01",
+                    //         "name": "Import",
+                    //         "dependsOn": [
+                    //             "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName02'))]",
+                    //             "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName01'), 'Import')]"
+                    //         ],
+                    //         "properties": {
+                    //             "operationMode": "Import",
+                    //             "storageKey": "[variables('_artifactsLocationSasToken')]",
+                    //             "storageKeyType": "SharedAccessKey",
+                    //             "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                    //             "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                    //             "storageUri": "[uri(variables('_artifactLocationBacpac'), 'SignalR-2020-12-31-11-16.bacpac')]"
+                    //         }
+                    //     }
+                    // ]
                 },
                 {
                     "type": "databases",
@@ -485,26 +521,26 @@
                         "collation": "SQL_Latin1_General_CP1_CI_AS",
                         "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
                         "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
-                    },
-                    "resources": [
-                        {
-                            "type": "extensions",
-                            "apiVersion": "2014-04-01",
-                            "name": "Import",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03'))]",
-                                "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName02'), 'Import')]"
-                            ],
-                            "properties": {
-                                "operationMode": "Import",
-                                "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "SharedAccessKey",
-                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
-                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'DmsRenditions-2020-12-31-11-17.bacpac')]"
-                            }
-                        }
-                    ]
+                    }//,
+                    // "resources": [
+                    //     {
+                    //         "type": "extensions",
+                    //         "apiVersion": "2014-04-01",
+                    //         "name": "Import",
+                    //         "dependsOn": [
+                    //             "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03'))]",
+                    //             "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName02'), 'Import')]"
+                    //         ],
+                    //         "properties": {
+                    //             "operationMode": "Import",
+                    //             "storageKey": "[variables('_artifactsLocationSasToken')]",
+                    //             "storageKeyType": "SharedAccessKey",
+                    //             "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                    //             "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                    //             "storageUri": "[uri(variables('_artifactLocationBacpac'), 'DmsRenditions-2020-12-31-11-17.bacpac')]"
+                    //         }
+                    //     }
+                    // ]
                 },
                 {
                     "type": "databases",
@@ -525,26 +561,26 @@
                         "collation": "SQL_Latin1_General_CP1_CI_AS",
                         "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
                         "maxSizeBytes": "[mul(mul(mul(variables('sqlDatabaseSkuSizeGB'),1024),1024),1024)]"
-                    },
-                    "resources": [
-                        {
-                            "type": "extensions",
-                            "apiVersion": "2014-04-01",
-                            "name": "Import",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName04'))]",
-                                "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName03'), 'Import')]"
-                            ],
-                            "properties": {
-                                "operationMode": "Import",
-                                "storageKey": "[variables('_artifactsLocationSasToken')]",
-                                "storageKeyType": "SharedAccessKey",
-                                "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
-                                "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
-                                "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms_queue-2020-12-31-11-17.bacpac')]"
-                            }
-                        }
-                    ]
+                    }//,
+                    // "resources": [
+                    //     {
+                    //         "type": "extensions",
+                    //         "apiVersion": "2014-04-01",
+                    //         "name": "Import",
+                    //         "dependsOn": [
+                    //             "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName04'))]",
+                    //             "[resourceId('Microsoft.Sql/servers/databases/extensions', variables('sqlServerName'), variables('databaseName03'), 'Import')]"
+                    //         ],
+                    //         "properties": {
+                    //             "operationMode": "Import",
+                    //             "storageKey": "[variables('_artifactsLocationSasToken')]",
+                    //             "storageKeyType": "SharedAccessKey",
+                    //             "administratorLogin": "[parameters('sqlServerAdministratorUsername')]",
+                    //             "administratorLoginPassword": "[parameters('sqlServerAdministratorPassword')]",
+                    //             "storageUri": "[uri(variables('_artifactLocationBacpac'), 'dms_queue-2020-12-31-11-17.bacpac')]"
+                    //         }
+                    //     }
+                    // ]
                 }
             ]
         }
@@ -552,6 +588,10 @@
     "outputs": {
         "eSessionEndpoint": {
             "value": "[concat(variables('siteName02'), '.azurewebsites.net')]",
+            "type": "string"
+        },
+        "eSessionAdminAccount": {
+            "value": "[parameters('newEmailAdminAccount')]",
             "type": "string"
         }
     }

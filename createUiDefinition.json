@@ -1,53 +1,83 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
-    "handler": "Microsoft.Azure.CreateUIDef",
-    "version": "0.1.2-preview",
-    "parameters": {
-      "basics": [
-        {
-          "name": "sqlServerAdministratorUsername",
-          "type": "Microsoft.Compute.UserNameTextBox",
-          "label": "SQL Server Admin Username",
-          "toolTip": "Admin username to connect to SQL Server and Databases",
-          "osPlatform": "Windows",
-          "defaultValue": "esessiondbadmin",
-          "constraints": {
-              "required": true
-          }
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Azure.CreateUIDef",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+  {
+        "name": "locationLinux",
+        "type": "Microsoft.Common.TextBox",
+        "osPlatform": "Windows",
+        "defaultValue": "germanywestcentral",
+        "label": "Location for Linux web apps.",
+        "toolTip": "Location for App Service plan which will host a Linux web apps. Must be different than Resource Groups location, since Windows and Linux app plans cannot coexist in the same resource group.",
+        "constraints": {
+            "required": true
+        }
       },
-      {
-          "name": "sqlServerAdministratorPassword",
-          "type": "Microsoft.Compute.CredentialsCombo",
-          "osPlatform": "Windows",
-          "label": {
-              "password": "Admin Password",
-              "confirmPassword": "Repeat Admin Password"
-          },
-          "toolTip": {
-              "password": "Password for SQL Admin user"
-          },
-          "constraints": {
-              "required": true
-          }
-      },
-      {
-          "name": "locationLinux",
-          "type": "Microsoft.Common.TextBox",
-          "osPlatform": "Windows",
-          "defaultValue": "germanywestcentral",
-          "label": "Location for Linux web apps.",
-          "toolTip": "Location for App Service plan which will host a Linux web apps. Must be different than Resource Groups location, since Windows and Linux app plans cannot coexist in the same resource group.",
-          "constraints": {
-              "required": true
-          }
+  {
+    "name": "SQL",
+    "type": "Microsoft.Common.Section",
+    "label": "SQL Server Admin login",
+    "elements": [
+    {
+      "name": "sqlServerAdministratorUsername",
+      "type": "Microsoft.Compute.UserNameTextBox",
+      "label": "SQL Server Admin Username",
+      "toolTip": "Admin username to connect to SQL Server and Databases",
+      "osPlatform": "Windows",
+      "defaultValue": "esessiondbadmin",
+      "constraints": {
+        "required": true
       }
-      ],
-      "steps": [],
-      "outputs": {
-        "sqlServerAdministratorUsername": "[basics.sqlServerAdministratorUsername]",
-        "sqlServerAdministratorPassword": "[basics.sqlServerAdministratorPassword.password]",
-        "locationLinux": "[basics.locationLinux]",
-        "location": "[location()]"
+    },
+    {
+      "name": "sqlServerAdministratorPassword",
+      "type": "Microsoft.Compute.CredentialsCombo",
+      "osPlatform": "Windows",
+      "label": {
+        "password": "SQL Server Admin Password",
+        "confirmPassword": "Repeat SQL Server Admin Password"
+      },
+      "toolTip": {
+        "password": "Password for SQL Server Admin user"
+      },
+      "constraints": {
+        "required": true
       }
     }
+],
+"visible": true
+},
+{
+    "name": "Email",
+    "type": "Microsoft.Common.Section",
+    "label": "eSession Admin login",
+    "elements": [
+    {
+      "name": "newEmailAdminAccount",
+      "type": "Microsoft.Common.TextBox",
+      "osPlatform": "Windows",
+      "defaultValue": "",
+      "label": "eSession Admin Email:",
+      "toolTip": "Email address for Admin User. Very important that this is a valid Azure AD account. Otherwise, login will not work.",
+      "constraints": {
+        "required": true,
+        "regex": "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
+        "validationMessage": "Email is not valid. Please re-enter."
+        }
+    }
+    ],
+"visible": true
+}
+    ],
+    "steps": [],
+    "outputs": {
+      "sqlServerAdministratorUsername": "[basics.sqlServerAdministratorUsername]",
+      "sqlServerAdministratorPassword": "[basics.sqlServerAdministratorPassword.password]",
+      "locationLinux": "[basics.locationLinux]",
+      "location": "[location()]"
+    }
   }
+}
+
