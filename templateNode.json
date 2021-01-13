@@ -114,6 +114,10 @@
             "value": "[concat(variables('siteName02'), '.azurewebsites.net')]",
             "type": "string"
         },
+        "publishing": {
+            "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties]",
+            "type": "object"
+        },
         "username": {
             "value": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties.publishingUserName]",
             "type": "string"
