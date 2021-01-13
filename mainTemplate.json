@@ -300,7 +300,9 @@
                     "location": "[parameters('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/sites/', variables('siteName04'))]",
-                        "[resourceId('Microsoft.Web/sites/', variables('siteName02'))]"
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName02'))]",
+                        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName03'))]",
+                        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName04'))]"
                     ],
                     "tags": {
                         "displayName": "webDeploy"

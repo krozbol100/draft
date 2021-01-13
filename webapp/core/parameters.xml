@@ -23,6 +23,12 @@
     <parameterEntry kind="TextFile" scope="appsettings.json" match="esessionrendition_placeholder" />
   </parameter>
 
+  <parameter name="eSession Admin Connection String" description="Connection string to Import the Dacpac for eSession Database" tags="Hidden, SQLConnectionString, NoStore">
+    <parameterEntry kind="ProviderPath" scope="dbDacFx" match="DemoeSession.dacpac" />
+  </parameter>
+  <parameter name="SignalR Admin Connection String" description="Connection string to Import the Dacpac for SignalR Database" tags="Hidden, SQLConnectionString, NoStore">
+    <parameterEntry kind="ProviderPath" scope="dbDacFx" match="DemoeSession_SignalR.dacpac" />
+  </parameter>
   <parameter name="Application Path" description="Full site path where you would like to install your application (i.e., Default Web Site/Content)" defaultValue="Default Web Site/Content" tags="iisapp">
     <parameterEntry kind="ProviderPath" scope="iisapp" match="WebSite" />
   </parameter>
