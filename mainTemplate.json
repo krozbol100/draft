@@ -312,7 +312,6 @@
                         "dbType": "SQL",
                         "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
                         "setParameters": {
-                            "New eSession Admin Email": "[parameters('newEmailAdminAccount')]",
                             "New eSession Rest hostname": "[variables('siteName01')]",
                             "New eSession Rendition connString": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName03'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
                             "New eSession DMS_queue connString": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName04'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
@@ -386,6 +385,7 @@
                         "dbType": "SQL",
                         "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
                         "setParameters": {
+                            "New eSession Admin Email": "[parameters('newEmailAdminAccount')]",
                             "New eSession Default connString": "[reference('ConnString01').outputs.result01.value]",
                             "New eSession SignalR connString": "[reference('ConnString01').outputs.result02.value]",
                             "New eSession App hostname": "[variables('siteName02')]",
