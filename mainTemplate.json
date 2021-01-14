@@ -3,14 +3,14 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "newEmailAdminAccount": {
-            "defaultValue": "sadmir.duric@comtrade.com",
+            "defaultValue": "",
             "type": "String",
             "metadata": {
                 "description": "Email address for Admin User. Very important that this is a valid Azure AD account. Otherwise, login will not work."
             }
         },
         "sqlServerAdministratorUsername": {
-            "defaultValue": "esessiondbadmin",
+            "defaultValue": "",
             "minLength": 1,
             "type": "String",
             "metadata": {
@@ -18,7 +18,7 @@
             }
         },
         "sqlServerAdministratorPassword": {
-            "defaultValue": "P@ssw0rd",
+            "defaultValue": "",
             "minLength": 8,
             "maxLength": 128,
             "type": "SecureString",
@@ -162,7 +162,9 @@
                             "value": "false"
                         }
                     ],
-                    "linuxFxVersion": "[concat('DOCKER|comtradehubtest.azurecr.io/docgen_mail_sign:1.0')]"
+                    "linuxFxVersion": "[concat('DOCKER|comtradehubtest.azurecr.io/docgen_mail_sign:1.0')]",
+                    "httpLoggingEnabled": true,
+                    "logsDirectorySizeLimit": "35"
                 },
                 "name": "[variables('siteName01')]",
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName01'))]"
@@ -208,7 +210,7 @@
                         "dbType": "None",
                         "connectionString": "",
                         "setParameters": {
-                            "New eSession Hostname": "[variables('siteName03')]"
+                            "New eSession Hostname": "[variables('siteName05')]"
                         }
                     }
                 }
@@ -320,7 +322,7 @@
                             "DmsRenditions Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',variables('databaseName03'),';User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
                             "dms_queue Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',variables('databaseName04'),';User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
                             "New eSession FTPS Hostname": "[reference(variables('siteName02')).ftpsHostName]",
-                            "New eSession FTPS Username": "[reference(variables('siteName02')).ftpUserName]",
+                            "New eSession FTPS Username": "[replace(reference(variables('siteName02')).ftpUserName,'\\','\\\\')]",
                             "New eSession FTPS Password": "[list(resourceId('Microsoft.Web/sites/config', variables('siteName02'), 'publishingcredentials'), '2016-08-01').properties.publishingPassword]",
                             "New eSession FTPS Domain": "[variables('siteName02')]"
                         }

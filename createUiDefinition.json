@@ -22,7 +22,7 @@
     "elements": [
     {
       "name": "sqlServerAdministratorUsername",
-      "type": "Microsoft.Compute.UserNameTextBox",
+      "type": "Microsoft.Common.TextBox",
       "label": "SQL Server Admin Username",
       "toolTip": "Admin username to connect to SQL Server and Databases",
       "osPlatform": "Windows",
@@ -73,9 +73,10 @@
     ],
     "steps": [],
     "outputs": {
-      "sqlServerAdministratorUsername": "[basics.sqlServerAdministratorUsername]",
-      "sqlServerAdministratorPassword": "[basics.sqlServerAdministratorPassword.password]",
-      "locationLinux": "[basics.locationLinux]",
+      "newEmailAdminAccount": "[basics('Email').newEmailAdminAccount]",
+      "sqlServerAdministratorUsername": "[basics('SQL').sqlServerAdministratorUsername]",
+      "sqlServerAdministratorPassword": "[basics('SQL').sqlServerAdministratorPassword.password]",
+      "locationLinux": "[basics('locationLinux')]",
       "location": "[location()]"
     }
   }
