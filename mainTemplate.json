@@ -250,8 +250,9 @@
                     },
                     "properties": {
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-user.zip')]",
-                        "dbType": "SQL",
-                        "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "dbType": "None",
+                        //"connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "connectionString": "",
                         "setParameters": {
                             "New eSession Connection String": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName01'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
                         }
@@ -309,8 +310,9 @@
                     },
                     "properties": {
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-rendition.zip')]",
-                        "dbType": "SQL",
-                        "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "dbType": "None",
+                        //"connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "connectionString": "",
                         "setParameters": {
                             "New eSession Rest hostname": "[variables('siteName01')]",
                             "New eSession Rendition connString": "[concat('Server=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', variables('databaseName03'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdministratorUsername'), ';Password=',parameters('sqlServerAdministratorPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
@@ -382,8 +384,9 @@
                     },
                     "properties": {
                         "packageUri": "[uri(variables('_artifactLocation'), 'webapp/wwwroot-esession-core.zip')]",
-                        "dbType": "SQL",
-                        "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "dbType": "None",
+                        //"connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "connectionString": "",
                         "setParameters": {
                             "New eSession Admin Email": "[parameters('newEmailAdminAccount')]",
                             "New eSession Default connString": "[reference('ConnString01').outputs.result01.value]",

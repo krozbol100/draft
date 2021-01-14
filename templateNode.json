@@ -2,6 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "newEmailAdminAccount": {
+            "defaultValue": "sadmir.duric@comtrade.com",
+            "type": "String",
+            "metadata": {
+                "description": "Email address for Admin User. Very important that this is a valid Azure AD account. Otherwise, login will not work."
+            }
+        },
         "sqlServerAdministratorUsername": {
             "defaultValue": "esessiondbadmin",
             "minLength": 1,
@@ -29,9 +36,18 @@
     },
     "variables": {
         "siteName": "[concat('esession-', uniqueString(resourceGroup().id))]",
+        "siteName01": "[concat('esession-rest-', uniqueString(resourceGroup().id))]",
         "siteName02": "[concat('esession-app-', uniqueString(resourceGroup().id))]",
-        "siteName03": "[concat('esession-core-', uniqueString(resourceGroup().id))]",
-        "servicePlanName02": "[concat(variables('siteName'), '-asp')]"//,
+        "siteName03": "[concat('esession-user-', uniqueString(resourceGroup().id))]",
+        "siteName04": "[concat('esession-rendition-', uniqueString(resourceGroup().id))]",
+        "siteName05": "[concat('esession-core-', uniqueString(resourceGroup().id))]",
+        "databaseName01": "esession", 
+        "databaseName02": "esession-signalr",
+        "databaseName03": "esessionRendition",
+        "databaseName04": "esession-dmsqueue",
+        "sqlServerName": "esession-test-sqlserver",
+        "servicePlanName01": "[concat(variables('siteName'), '-linux')]",
+        "servicePlanName02": "[concat(variables('siteName'), '-asp')]"
         //"_artifactLocation": "[deployment().properties.templateLink.uri]"
     },
     "resources": [
@@ -81,32 +97,40 @@
                 },
                 "name": "[variables('siteName02')]",
                 "serverFarmId": "[variables('servicePlanName02')]"
-            }//,
-            // "resources": [
-            //     {
-            //         "type": "extensions",
-            //         "apiVersion": "2015-08-01",
-            //         "name": "MSDeploy",
-            //         "location": "[parameters('location')]",
-            //         "dependsOn": [
-            //             "[resourceId('Microsoft.Web/sites/', variables('siteName02'))]"
-            //         ],
-            //         "tags": {
-            //             "displayName": "webDeploy"
-            //         },
-            //         "properties": {
-            //             //"packageUri": "[uri(variables('_artifactLocation'),'webapp/wwwroot-session-app.zip')]",
-            //             "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-esession-core.zip",
-            //             "dbType": "SQL",
-            //             "connectionString": "[concat('Data Source=tcp:esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=master;User Id=esessiondbadmin;Password=sif.ra123456;')]",
-            //             "setParameters": {
-            //                 //"Application Path": "content/Website",
-            //                 "eSession Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=esessionNode;User Id=esessiondbadmin;Password=sif.ra123456;')]",
-            //                 "SignalR Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=esession-ufrblemwlvkqk-sql.database.windows.net,1433;Initial Catalog=esessionSignalR;User Id=esessiondbadmin;Password=sif.ra123456;')]"
-            //         }
-            //     }
-            //     }
-            // ]
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2015-08-01",
+                    "name": "MSDeploy",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('siteName02'))]"
+                    ],
+                    "tags": {
+                        "displayName": "webDeploy"
+                    },
+                    "properties": {
+                        //"packageUri": "[uri(variables('_artifactLocation'),'webapp/wwwroot-session-app.zip')]",
+                        "packageUri": "https://raw.githubusercontent.com/krozbol100/draft/master/webapp/wwwroot-esession-core.zip",
+                        "dbType": "SQL",
+                        "connectionString": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=master;User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                        "setParameters": {
+                            "Application Path" : "[variables('siteName02')]",
+                            "New eSession Admin Email": "[parameters('newEmailAdminAccount')]",
+                            "New eSession Default connString": "xxxyyy",
+                            "New eSession SignalR connString": "yyyxxx",
+                            "New eSession App hostname": "[variables('siteName02')]",
+                            "New eSession Core hostname": "[variables('siteName05')]",
+                            "New eSession Rest hostname": "[variables('siteName01')]",
+                            "New eSession User hostname": "[variables('siteName03')]",
+                            "New eSession Rendition hostname": "[variables('siteName04')]",
+                            "eSession Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',variables('databaseName01'),';User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]",
+                            "SignalR Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=',variables('sqlServerName'),'.database.windows.net,1433;Initial Catalog=',variables('databaseName02'),';User Id=',parameters('sqlServerAdministratorUsername'),';Password=', parameters('sqlServerAdministratorPassword'), ';')]"
+                    }
+                }
+                }
+            ]
         }
     ],
     "outputs": {

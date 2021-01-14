@@ -1,0 +1,6 @@
+<MSDeploy.iisApp> 
+  <iisApp path="C:\Users\User\Desktop\msdeploy\wwwroot-esession-core-01\Content\WebSite" /> 
+  <dbDacFx path="C:\Users\User\Desktop\msdeploy\wwwroot-esession-core-01\DemoeSession.dacpac" IncludeData="True" />
+  <dbDacFx path="C:\Users\User\Desktop\msdeploy\wwwroot-esession-core-01\DemoeSession_SignalR.dacpac" IncludeData="True" />
+  <dbfullsql path="C:\Users\User\Desktop\msdeploy\wwwroot-esession-core-01\updateUser.sql"/>
+</MSDeploy.iisApp>
