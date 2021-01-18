@@ -1,3 +1,0 @@
-<MSDeploy.iisApp> 
-  <iisApp path="Content/WebSite" /> 
-</MSDeploy.iisApp>
